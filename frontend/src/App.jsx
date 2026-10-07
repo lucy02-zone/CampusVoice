@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Posts from "./pages/Posts";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/posts" element={<Posts />} />
       </Routes>
     </BrowserRouter>
   );
