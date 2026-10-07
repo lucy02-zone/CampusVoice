@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const sequelize = require("./config/database");
 
 dotenv.config();
 
@@ -23,6 +24,19 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`CampusVoice backend running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+
+    console.log("PostgreSQL connected successfully");
+
+    app.listen(PORT, () => {
+      console.log(`CampusVoice backend running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to PostgreSQL:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
