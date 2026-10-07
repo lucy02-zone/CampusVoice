@@ -16,6 +16,13 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    message: "CampusVoice API is healthy",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`CampusVoice backend running on port ${PORT}`);
 });
