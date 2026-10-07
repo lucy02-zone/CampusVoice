@@ -6,10 +6,22 @@ const {
 } = require("../controllers/complaintResponseController");
 
 const protect = require("../middleware/authMiddleware");
+const authorize = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
-router.post("/", protect, createComplaintResponse);
-router.get("/", protect, getComplaintResponses);
+router.post(
+    "/",
+    protect,
+    authorize("MENTOR"),
+    createComplaintResponse
+);
+
+router.get(
+    "/",
+    protect,
+    authorize("MENTOR"),
+    getComplaintResponses
+);
 
 module.exports = router;
