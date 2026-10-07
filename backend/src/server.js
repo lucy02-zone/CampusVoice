@@ -8,13 +8,32 @@ const voteRoutes = require("./routes/voteRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const complaintResponseRoutes = require("./routes/complaintResponseRoutes");
-
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 require("./models");
 
 dotenv.config();
 
 const app = express();
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+  })
+);
 
+app.use(helmet());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: {
+    success: false,
+    message: "Too many requests, please try again later",
+  },
+});
+
+app.use("/api", limiter);
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
