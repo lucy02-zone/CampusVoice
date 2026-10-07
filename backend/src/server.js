@@ -2,6 +2,7 @@ const authRoutes = require("./routes/authRoutes");
 const express = require("express");
 const dotenv = require("dotenv");
 const sequelize = require("./config/database");
+const postRoutes = require("./routes/postRoutes");
 
 require("./models");
 
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 const PORT = process.env.PORT || 5000;
 
