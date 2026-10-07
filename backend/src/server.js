@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const sequelize = require("./config/database");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const voteRoutes = require("./routes/voteRoutes");
 
 require("./models");
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/votes", voteRoutes);
 
 const PORT = process.env.PORT || 5000;
 
