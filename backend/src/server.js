@@ -5,6 +5,7 @@ const sequelize = require("./config/database");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const voteRoutes = require("./routes/voteRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 require("./models");
 
@@ -17,7 +18,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/votes", voteRoutes);
-
+app.use("/api/notifications", notificationRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
