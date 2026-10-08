@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import {
-    getComplaintResponses,
-} from "../api/complaintResponseApi";
+    Alert,
+    Box,
+    Card,
+    CardContent,
+    Chip,
+    Container,
+    Typography,
+} from "@mui/material";
+
+import { getComplaintResponses } from "../api/complaintResponseApi";
 import { useAuth } from "../context/AuthContext";
 
 const AdminComplaintResponses = () => {
@@ -30,27 +38,41 @@ const AdminComplaintResponses = () => {
     }, [token]);
 
     return (
-        <div>
-            <h1>Complaint Responses</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Typography variant="h4" gutterBottom>
+                    Complaint Responses
+                </Typography>
 
-            {error && <p>{error}</p>}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 3 }}>
+                        {error}
+                    </Alert>
+                )}
 
-            {responses.length === 0 ? (
-                <p>No complaint responses available.</p>
-            ) : (
-                responses.map((item) => (
-                    <div key={item.id}>
-                        <h3>Complaint #{item.complaintId}</h3>
+                {responses.length === 0 ? (
+                    <Alert severity="info">
+                        No complaint responses available.
+                    </Alert>
+                ) : (
+                    responses.map((item) => (
+                        <Card key={item.id} sx={{ mb: 2 }}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Complaint #{item.complaintId}
+                                </Typography>
 
-                        <p>Response: {item.response}</p>
+                                <Typography sx={{ mb: 2 }}>
+                                    {item.response}
+                                </Typography>
 
-                        <p>Status: {item.status}</p>
-
-                        <hr />
-                    </div>
-                ))
-            )}
-        </div>
+                                <Chip label={item.status} />
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </Box>
+        </Container>
     );
 };
 
