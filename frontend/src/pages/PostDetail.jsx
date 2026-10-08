@@ -27,6 +27,9 @@ const PostDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
+    const [voteMessage, setVoteMessage] = useState("");
+    const [voting, setVoting] = useState(false);
+    const [votingType, setVotingType] = useState(null);
 
     useEffect(() => {
         const loadPost = async () => {
@@ -59,20 +62,33 @@ const PostDetail = () => {
         loadPost();
     }, [id]);
 
-    const handleVote = async (voteType) => {
+    const handleVote = async (type) => {
+        if (voting) return;
+
         setActionError("");
+        setVoteMessage("");
+        setVoting(true);
+        setVotingType(type);
+
         try {
-            await votePost(
+            const response = await votePost(
                 {
                     postId: post.id,
-                    voteType,
+                    voteType: type,
                 },
                 token
             );
+
+            if (response.success) {
+                setVoteMessage(response.message || "Vote recorded successfully");
+            }
         } catch (error) {
             setActionError(
                 getApiErrorMessage(error, "Failed to submit vote")
             );
+        } finally {
+            setVoting(false);
+            setVotingType(null);
         }
     };
 
@@ -194,6 +210,12 @@ const PostDetail = () => {
                             {post.content}
                         </Typography>
 
+                        {voteMessage && (
+                            <Alert severity="success" sx={{ mb: 3 }}>
+                                {voteMessage}
+                            </Alert>
+                        )}
+
                         {actionError && (
                             <Alert severity="error" sx={{ mb: 3 }}>
                                 {actionError}
@@ -201,10 +223,16 @@ const PostDetail = () => {
                         )}
 
                         {isAuthenticated && (
-                            <Box sx={{ mb: 4, display: "flex", gap: 2 }}>
+                            <Box sx={{ mb: 4, display: "flex", gap: 2, alignItems: "center" }}>
                                 <Button
                                     variant="contained"
                                     onClick={() => handleVote("UPVOTE")}
+                                    disabled={voting}
+                                    startIcon={
+                                        votingType === "UPVOTE" ? (
+                                            <CircularProgress size={16} color="inherit" />
+                                        ) : null
+                                    }
                                 >
                                     👍 Upvote
                                 </Button>
@@ -212,6 +240,12 @@ const PostDetail = () => {
                                 <Button
                                     variant="outlined"
                                     onClick={() => handleVote("DOWNVOTE")}
+                                    disabled={voting}
+                                    startIcon={
+                                        votingType === "DOWNVOTE" ? (
+                                            <CircularProgress size={16} color="inherit" />
+                                        ) : null
+                                    }
                                 >
                                     👎 Downvote
                                 </Button>
