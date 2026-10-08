@@ -12,7 +12,7 @@ import {
 
 import { loginUser } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
-
+import { getApiErrorMessage } from "../api/apiError";
 const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
@@ -43,9 +43,7 @@ const Login = () => {
                 navigate("/");
             }
         } catch (error) {
-            setError(
-                error.response?.data?.message || "Login failed"
-            );
+            setError(getApiErrorMessage(error, "Login failed"));
         }
     };
 
