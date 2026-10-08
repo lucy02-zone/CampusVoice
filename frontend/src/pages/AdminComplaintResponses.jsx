@@ -5,6 +5,7 @@ import {
     Card,
     CardContent,
     Chip,
+    CircularProgress,
     Container,
     Typography,
 } from "@mui/material";
@@ -16,6 +17,7 @@ const AdminComplaintResponses = () => {
     const { token } = useAuth();
 
     const [responses, setResponses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -31,6 +33,8 @@ const AdminComplaintResponses = () => {
                     error.response?.data?.message ||
                     "Failed to load complaint responses"
                 );
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -44,17 +48,34 @@ const AdminComplaintResponses = () => {
                     Complaint Responses
                 </Typography>
 
-                {error && (
+                {loading && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: 5,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
+
+                {!loading && error && (
                     <Alert severity="error" sx={{ mb: 3 }}>
                         {error}
                     </Alert>
                 )}
 
-                {responses.length === 0 ? (
-                    <Alert severity="info">
-                        No complaint responses available.
-                    </Alert>
-                ) : (
+                {!loading &&
+                    !error &&
+                    responses.length === 0 && (
+                        <Alert severity="info">
+                            No complaint responses available.
+                        </Alert>
+                    )}
+
+                {!loading &&
+                    !error &&
                     responses.map((item) => (
                         <Card key={item.id} sx={{ mb: 2 }}>
                             <CardContent>
@@ -69,8 +90,7 @@ const AdminComplaintResponses = () => {
                                 <Chip label={item.status} />
                             </CardContent>
                         </Card>
-                    ))
-                )}
+                    ))}
             </Box>
         </Container>
     );
