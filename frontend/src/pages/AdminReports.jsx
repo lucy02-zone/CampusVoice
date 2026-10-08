@@ -1,4 +1,14 @@
 import { useEffect, useState } from "react";
+import {
+    Alert,
+    Box,
+    Card,
+    CardContent,
+    Chip,
+    Container,
+    Typography,
+} from "@mui/material";
+
 import { getReports } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
 
@@ -28,40 +38,53 @@ const AdminReports = () => {
     }, [token]);
 
     return (
-        <div>
-            <h1>Reported Posts</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Typography variant="h4" gutterBottom>
+                    Reported Posts
+                </Typography>
 
-            {error && <p>{error}</p>}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 3 }}>
+                        {error}
+                    </Alert>
+                )}
 
-            {reports.length === 0 ? (
-                <p>No reports available.</p>
-            ) : (
-                reports.map((report) => (
-                    <div key={report.id}>
-                        <h3>Report #{report.id}</h3>
+                {reports.length === 0 ? (
+                    <Alert severity="info">
+                        No reports available.
+                    </Alert>
+                ) : (
+                    reports.map((report) => (
+                        <Card key={report.id} sx={{ mb: 2 }}>
+                            <CardContent>
+                                <Typography variant="h6">
+                                    Report #{report.id}
+                                </Typography>
 
-                        <p>
-                            Post ID: {report.postId}
-                        </p>
+                                <Typography>
+                                    Post ID: {report.postId}
+                                </Typography>
 
-                        <p>
-                            Reason: {report.reason}
-                        </p>
+                                <Typography>
+                                    Reason: {report.reason}
+                                </Typography>
 
-                        <p>
-                            Description:{" "}
-                            {report.description || "No description"}
-                        </p>
+                                <Typography sx={{ mt: 1 }}>
+                                    Description:{" "}
+                                    {report.description || "No description"}
+                                </Typography>
 
-                        <p>
-                            Status: {report.status}
-                        </p>
-
-                        <hr />
-                    </div>
-                ))
-            )}
-        </div>
+                                <Chip
+                                    label={report.status}
+                                    sx={{ mt: 2 }}
+                                />
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </Box>
+        </Container>
     );
 };
 
