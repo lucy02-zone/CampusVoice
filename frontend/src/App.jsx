@@ -11,9 +11,12 @@ import Notifications from "./pages/Notifications";
 import ReportPost from "./pages/ReportPost";
 import AdminReports from "./pages/AdminReports";
 import AdminComplaintResponses from "./pages/AdminComplaintResponses";
+import Navbar from "./components/Navbar";
+import NotFound from "./pages/NotFound";
 const App = () => {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -68,6 +71,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
