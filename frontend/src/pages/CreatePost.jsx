@@ -1,5 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    Alert,
+    Box,
+    Button,
+    Container,
+    Paper,
+    TextField,
+    Typography,
+} from "@mui/material";
+
 import { createPost } from "../api/postApi";
 import { useAuth } from "../context/AuthContext";
 
@@ -34,47 +44,83 @@ const CreatePost = () => {
             }
         } catch (error) {
             setError(
-                error.response?.data?.message || "Failed to create post"
+                error.response?.data?.message ||
+                "Failed to create post"
             );
         }
     };
 
     return (
-        <div>
-            <h1>Create Anonymous Post</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Paper sx={{ p: 4 }}>
+                    <Typography variant="h4" gutterBottom>
+                        Create Anonymous Post
+                    </Typography>
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Post title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                />
+                    <Typography
+                        color="text.secondary"
+                        sx={{ mb: 3 }}
+                    >
+                        Share your campus experience without revealing
+                        your identity.
+                    </Typography>
 
-                <textarea
-                    name="content"
-                    placeholder="Write your message..."
-                    value={formData.content}
-                    onChange={handleChange}
-                    required
-                />
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 3 }}>
+                            {error}
+                        </Alert>
+                    )}
 
-                <input
-                    type="text"
-                    name="category"
-                    placeholder="Category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    required
-                />
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 3,
+                        }}
+                    >
+                        <TextField
+                            label="Title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                        />
 
-                <button type="submit">Publish Post</button>
-            </form>
+                        <TextField
+                            label="Content"
+                            name="content"
+                            value={formData.content}
+                            onChange={handleChange}
+                            required
+                            multiline
+                            rows={6}
+                            fullWidth
+                        />
 
-            {error && <p>{error}</p>}
-        </div>
+                        <TextField
+                            label="Category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                        />
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                        >
+                            Publish Post
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
     );
 };
 
