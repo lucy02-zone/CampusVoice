@@ -13,6 +13,8 @@ import {
     Grid,
     Paper,
     Typography,
+    Divider,
+    useTheme,
 } from "@mui/material";
 import {
     AreaChart,
@@ -40,77 +42,90 @@ import { getComplaintResponses } from "../api/complaintResponseApi";
 import { getUserStats } from "../api/userApi";
 import { getApiErrorMessage } from "../api/apiError";
 
-const CHART_COLORS = ["#6366f1", "#22d3ee", "#f59e0b", "#10b981", "#f43f5e", "#a855f7"];
+const CHART_COLORS = ["#1976d2", "#00bcd4", "#4caf50", "#ff9800", "#f44336", "#9c27b0"];
 
 const TooltipBox = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
-        <Box
+        <Paper
+            elevation={3}
             sx={{
-                bgcolor: "rgba(15,15,25,0.92)",
-                border: "1px solid rgba(99,102,241,0.4)",
+                p: 2,
                 borderRadius: 2,
-                p: "10px 14px",
-                backdropFilter: "blur(8px)",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
             }}
         >
             {label && (
-                <Typography variant="caption" sx={{ color: "#94a3b8", display: "block", mb: 0.5 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1, fontWeight: 600 }}>
                     {label}
                 </Typography>
             )}
             {payload.map((entry, i) => (
-                <Typography key={i} variant="body2" sx={{ color: entry.color || "#e2e8f0", fontWeight: 600 }}>
+                <Typography key={i} variant="body2" sx={{ color: entry.color || "text.primary", fontWeight: 500 }}>
                     {entry.name}: {entry.value}
                 </Typography>
             ))}
-        </Box>
+        </Paper>
     );
 };
 
 const StatCard = ({ label, value, color = "primary.main", sub }) => (
     <Card
+        elevation={0}
         sx={{
-            boxShadow: "0 4px 20px rgba(0,0,0,0.18)",
+            height: "100%",
             borderRadius: 3,
-            background: "linear-gradient(145deg, #1e1e2e 0%, #16162a 100%)",
-            border: "1px solid rgba(255,255,255,0.06)",
-            transition: "transform 0.2s, box-shadow 0.2s",
-            "&:hover": { transform: "translateY(-3px)", boxShadow: "0 8px 30px rgba(0,0,0,0.3)" },
+            bgcolor: "background.paper",
+            border: "1px solid",
+            borderColor: "divider",
+            transition: "all 0.2s ease-in-out",
+            "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: "0 12px 24px -10px rgba(0,0,0,0.1)",
+                borderColor: color,
+            },
         }}
     >
-        <CardContent>
-            <Typography variant="subtitle2" sx={{ color: "#94a3b8", fontSize: "0.75rem", letterSpacing: 0.8, textTransform: "uppercase" }}>
+        <CardContent sx={{ p: 3 }}>
+            <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 0.5 }}>
                 {label}
             </Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, mt: 0.5, color, lineHeight: 1.1 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, mb: 0.5, color: "text.primary" }}>
                 {value}
             </Typography>
-            {sub && (
-                <Typography variant="caption" sx={{ color: "#f59e0b", mt: 0.5, display: "block" }}>
+            {sub ? (
+                <Typography variant="caption" sx={{ color: color, fontWeight: 500 }}>
                     {sub}
+                </Typography>
+            ) : (
+                <Typography variant="caption" color="text.disabled">
+                    Updated just now
                 </Typography>
             )}
         </CardContent>
     </Card>
 );
 
-const ChartCard = ({ title, children, height = 280 }) => (
+const ChartCard = ({ title, children, height = 300 }) => (
     <Paper
         elevation={0}
         sx={{
-            p: { xs: 2, md: 3 },
+            p: 3,
             borderRadius: 3,
-            background: "linear-gradient(145deg, #1e1e2e 0%, #16162a 100%)",
-            border: "1px solid rgba(255,255,255,0.06)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.18)",
+            bgcolor: "background.paper",
+            border: "1px solid",
+            borderColor: "divider",
             height: "100%",
+            display: "flex",
+            flexDirection: "column",
         }}
     >
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2.5, color: "#e2e8f0", letterSpacing: -0.3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: "text.primary" }}>
             {title}
         </Typography>
-        <Box sx={{ width: "100%", height }}>
+        <Box sx={{ width: "100%", height, flexGrow: 1 }}>
             {children}
         </Box>
     </Paper>
@@ -118,6 +133,7 @@ const ChartCard = ({ title, children, height = 280 }) => (
 
 const Dashboard = () => {
     const { user, token } = useAuth();
+    const theme = useTheme();
 
     const [stats, setStats] = useState({
         totalPosts: 0,
@@ -196,8 +212,8 @@ const Dashboard = () => {
                         (r) => (r.status || "PENDING").toUpperCase() === "PENDING"
                     ).length;
                     setReportStatusData([
-                        { name: "Pending", value: pending, fill: "#f43f5e" },
-                        { name: "Resolved", value: reportsList.length - pending, fill: "#10b981" },
+                        { name: "Pending", value: pending, fill: "#f44336" },
+                        { name: "Resolved", value: reportsList.length - pending, fill: "#4caf50" },
                     ]);
                 }
 
@@ -233,40 +249,39 @@ const Dashboard = () => {
     }, [token, isMentor]);
 
     const radialData = [
-        { name: "Posts", value: stats.userActivity.postsCount, fill: "#6366f1" },
-        { name: "Comments", value: stats.userActivity.commentsCount, fill: "#22d3ee" },
-        { name: "Votes Given", value: stats.userActivity.votesGiven, fill: "#f59e0b" },
+        { name: "Posts", value: stats.userActivity.postsCount, fill: "#1976d2" },
+        { name: "Comments", value: stats.userActivity.commentsCount, fill: "#00bcd4" },
+        { name: "Votes Given", value: stats.userActivity.votesGiven, fill: "#ff9800" },
     ];
 
     return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                background: "linear-gradient(160deg, #0f0f1a 0%, #111827 60%, #0f172a 100%)",
-                pt: 5,
-                pb: 8,
-            }}
-        >
+        <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh", pt: 4, pb: 8 }}>
             <Container maxWidth="xl">
-                <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 800,
-                        background: "linear-gradient(90deg, #6366f1, #22d3ee)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        mb: 0.5,
-                    }}
-                >
-                    Dashboard
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#64748b", mb: 4 }}>
-                    Welcome back, {user?.name || "Campus User"} 👋
-                </Typography>
+                {/* Header Section */}
+                <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box>
+                        <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 0.5 }}>
+                            Dashboard
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            Here's what's happening on CampusVoice today.
+                        </Typography>
+                    </Box>
+                    <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 2 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            component={Link}
+                            to="/create-post"
+                            sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600, px: 3 }}
+                        >
+                            + New Post
+                        </Button>
+                    </Box>
+                </Box>
 
                 {error && (
-                    <Alert severity="error" sx={{ mb: 3 }}>
+                    <Alert severity="error" sx={{ mb: 4, borderRadius: 2 }}>
                         {error}
                     </Alert>
                 )}
@@ -278,180 +293,131 @@ const Dashboard = () => {
                         p: { xs: 3, md: 4 },
                         mb: 4,
                         borderRadius: 3,
-                        background: "linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%)",
-                        boxShadow: "0 8px 32px rgba(79,70,229,0.35)",
-                        color: "white",
-                        position: "relative",
-                        overflow: "hidden",
-                        "&::before": {
-                            content: '""',
-                            position: "absolute",
-                            inset: 0,
-                            background: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.08) 0%, transparent 60%)",
-                        },
+                        bgcolor: "background.paper",
+                        border: "1px solid",
+                        borderColor: "divider",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                        flexWrap: "wrap",
                     }}
                 >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 3, flexWrap: "wrap", position: "relative" }}>
-                        <Avatar
-                            sx={{
-                                width: 72,
-                                height: 72,
-                                bgcolor: "rgba(255,255,255,0.2)",
-                                color: "white",
-                                fontWeight: 800,
-                                fontSize: "1.75rem",
-                                border: "2px solid rgba(255,255,255,0.3)",
-                            }}
-                        >
-                            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-                        </Avatar>
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                                {user?.name || "Campus User"}
-                            </Typography>
-                            <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                                {user?.email}
-                            </Typography>
-                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block", mt: 0.5 }}>
-                                Anonymous ID: <strong>{user?.anonymousHandle || "—"}</strong>
-                            </Typography>
+                    <Avatar
+                        sx={{
+                            width: 80,
+                            height: 80,
+                            bgcolor: theme.palette.primary.light,
+                            color: theme.palette.primary.main,
+                            fontWeight: 700,
+                            fontSize: "2rem",
+                        }}
+                    >
+                        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </Avatar>
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                            Welcome back, {user?.name || "User"}
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                            {user?.email}
+                        </Typography>
+                        <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+                            <Chip
+                                label={user?.role || "STUDENT"}
+                                color={isMentor ? "secondary" : "primary"}
+                                size="small"
+                                sx={{ fontWeight: 600, borderRadius: 1 }}
+                            />
+                            <Chip
+                                label={`Anonymous ID: ${user?.anonymousHandle || "—"}`}
+                                variant="outlined"
+                                size="small"
+                                sx={{ color: "text.secondary", borderRadius: 1 }}
+                            />
                         </Box>
-                        <Chip
-                            label={user?.role || "STUDENT"}
-                            sx={{
-                                bgcolor: "rgba(255,255,255,0.18)",
-                                color: "white",
-                                fontWeight: 700,
-                                border: "1px solid rgba(255,255,255,0.3)",
-                                backdropFilter: "blur(4px)",
-                            }}
-                        />
                     </Box>
                 </Paper>
 
                 {loading ? (
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 10 }}>
-                        <CircularProgress sx={{ color: "#6366f1" }} size={56} thickness={4} />
+                        <CircularProgress />
                     </Box>
                 ) : (
                     <>
-                        {/* Overview stat cards */}
-                        <Typography variant="overline" sx={{ color: "#6366f1", fontWeight: 700, letterSpacing: 2, mb: 1.5, display: "block" }}>
-                            Overview &amp; Statistics
+                        {/* Global Statistics */}
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
+                            Platform Overview
                         </Typography>
-
-                        <Grid container spacing={2.5} sx={{ mb: 4 }}>
+                        <Grid container spacing={3} sx={{ mb: 4 }}>
                             <Grid item xs={12} sm={6} md={3}>
-                                <StatCard label="Total Campus Posts" value={stats.totalPosts} color="#6366f1" />
+                                <StatCard label="Total Posts" value={stats.totalPosts} color="#1976d2" />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
-                                <StatCard label="Active Categories" value={stats.totalCategories} color="#22d3ee" />
+                                <StatCard label="Categories" value={stats.totalCategories} color="#00bcd4" />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
                                 <StatCard
                                     label="Notifications"
                                     value={stats.totalNotifications}
-                                    color="#10b981"
+                                    color="#ff9800"
                                     sub={stats.unreadNotifications > 0 ? `${stats.unreadNotifications} unread` : null}
                                 />
                             </Grid>
                             {isMentor ? (
-                                <>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard
-                                            label="Reported Posts"
-                                            value={stats.totalReports}
-                                            color="#f43f5e"
-                                            sub={stats.pendingReports > 0 ? `${stats.pendingReports} pending` : null}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard label="Complaint Responses" value={stats.totalResponses} color="#a855f7" />
-                                    </Grid>
-                                </>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <StatCard
+                                        label="Reports"
+                                        value={stats.totalReports}
+                                        color="#f44336"
+                                        sub={stats.pendingReports > 0 ? `${stats.pendingReports} pending action` : null}
+                                    />
+                                </Grid>
                             ) : (
                                 <Grid item xs={12} sm={6} md={3}>
-                                    <StatCard label="My Reputation" value={stats.userActivity.reputation} color="#f59e0b" />
+                                    <StatCard label="Reputation Score" value={stats.userActivity.reputation} color="#4caf50" />
                                 </Grid>
                             )}
                         </Grid>
 
-                        {/* Charts Row 1 */}
-                        <Typography variant="overline" sx={{ color: "#6366f1", fontWeight: 700, letterSpacing: 2, mb: 1.5, display: "block" }}>
-                            Analytics
-                        </Typography>
-
-                        <Grid container spacing={2.5} sx={{ mb: 2.5 }}>
+                        {/* Charts Section */}
+                        <Grid container spacing={3} sx={{ mb: 4 }}>
                             <Grid item xs={12} md={8}>
-                                <ChartCard title="📈 Posts Activity — Last 7 Days" height={260}>
+                                <ChartCard title="Post Activity (Last 7 Days)">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={postsPerDay} margin={{ top: 4, right: 16, left: -20, bottom: 0 }}>
+                                        <AreaChart data={postsPerDay} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                             <defs>
-                                                <linearGradient id="postsGrad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
-                                                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0.02} />
+                                                <linearGradient id="colorPosts" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor={theme.palette.primary.main} stopOpacity={0.2} />
+                                                    <stop offset="95%" stopColor={theme.palette.primary.main} stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                            <XAxis dataKey="date" tick={{ fill: "#64748b", fontSize: 11 }} tickLine={false} axisLine={false} />
-                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 11 }} tickLine={false} axisLine={false} />
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                            <XAxis dataKey="date" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
+                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
                                             <Tooltip content={<TooltipBox />} />
                                             <Area
                                                 type="monotone"
                                                 dataKey="posts"
                                                 name="Posts"
-                                                stroke="#6366f1"
-                                                strokeWidth={2.5}
-                                                fill="url(#postsGrad)"
-                                                dot={{ fill: "#6366f1", strokeWidth: 0, r: 4 }}
-                                                activeDot={{ r: 6, fill: "#818cf8" }}
+                                                stroke={theme.palette.primary.main}
+                                                strokeWidth={3}
+                                                fillOpacity={1}
+                                                fill="url(#colorPosts)"
+                                                activeDot={{ r: 6, strokeWidth: 0, fill: theme.palette.primary.main }}
                                             />
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 </ChartCard>
                             </Grid>
-
                             <Grid item xs={12} md={4}>
-                                <ChartCard title="🎯 My Activity Breakdown" height={260}>
+                                <ChartCard title="Posts by Category">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <RadialBarChart
-                                            innerRadius="30%"
-                                            outerRadius="90%"
-                                            data={radialData}
-                                            startAngle={90}
-                                            endAngle={-270}
-                                        >
-                                            <RadialBar
-                                                minAngle={15}
-                                                background={{ fill: "rgba(255,255,255,0.04)" }}
-                                                clockWise
-                                                dataKey="value"
-                                                cornerRadius={6}
-                                            />
-                                            <Tooltip content={<TooltipBox />} />
-                                            <Legend
-                                                iconSize={10}
-                                                formatter={(val) => (
-                                                    <span style={{ color: "#94a3b8", fontSize: 12 }}>{val}</span>
-                                                )}
-                                            />
-                                        </RadialBarChart>
-                                    </ResponsiveContainer>
-                                </ChartCard>
-                            </Grid>
-                        </Grid>
-
-                        {/* Charts Row 2 */}
-                        <Grid container spacing={2.5} sx={{ mb: 4 }}>
-                            <Grid item xs={12} md={isMentor ? 8 : 12}>
-                                <ChartCard title="📊 Posts by Category" height={260}>
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={categoryDistribution} margin={{ top: 4, right: 16, left: -20, bottom: 0 }} barCategoryGap="35%">
-                                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                            <XAxis dataKey="category" tick={{ fill: "#64748b", fontSize: 11 }} tickLine={false} axisLine={false} />
-                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 11 }} tickLine={false} axisLine={false} />
-                                            <Tooltip content={<TooltipBox />} />
-                                            <Bar dataKey="count" name="Posts" radius={[6, 6, 0, 0]}>
+                                        <BarChart data={categoryDistribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                            <XAxis dataKey="category" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
+                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
+                                            <Tooltip content={<TooltipBox />} cursor={{ fill: "#f1f5f9" }} />
+                                            <Bar dataKey="count" name="Posts" radius={[4, 4, 0, 0]} barSize={32}>
                                                 {categoryDistribution.map((_, i) => (
                                                     <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                                                 ))}
@@ -460,10 +426,51 @@ const Dashboard = () => {
                                     </ResponsiveContainer>
                                 </ChartCard>
                             </Grid>
+                        </Grid>
+
+                        {/* Bottom Row */}
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} md={isMentor ? 8 : 12}>
+                                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
+                                    My Activity Summary
+                                </Typography>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} sm={6} md={3}>
+                                        <StatCard label="My Posts" value={stats.userActivity.postsCount} color="#1976d2" />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={3}>
+                                        <StatCard label="My Comments" value={stats.userActivity.commentsCount} color="#00bcd4" />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={3}>
+                                        <StatCard label="Votes Given" value={stats.userActivity.votesGiven} color="#9c27b0" />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={3}>
+                                        <StatCard
+                                            label="Upvotes Received"
+                                            value={stats.userActivity.upvotesReceived ?? 0}
+                                            color="#4caf50"
+                                            sub={stats.userActivity.downvotesReceived > 0 ? `${stats.userActivity.downvotesReceived} downvotes` : null}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
 
                             {isMentor && (
                                 <Grid item xs={12} md={4}>
-                                    <ChartCard title="🚨 Report Status" height={260}>
+                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
+                                        Report Resolution
+                                    </Typography>
+                                    <Paper
+                                        elevation={0}
+                                        sx={{
+                                            p: 3,
+                                            borderRadius: 3,
+                                            bgcolor: "background.paper",
+                                            border: "1px solid",
+                                            borderColor: "divider",
+                                            height: 200,
+                                        }}
+                                    >
                                         {reportStatusData.length > 0 ? (
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <PieChart>
@@ -471,117 +478,31 @@ const Dashboard = () => {
                                                         data={reportStatusData}
                                                         cx="50%"
                                                         cy="50%"
-                                                        innerRadius="42%"
-                                                        outerRadius="70%"
-                                                        paddingAngle={4}
+                                                        innerRadius="50%"
+                                                        outerRadius="80%"
+                                                        paddingAngle={2}
                                                         dataKey="value"
-                                                        nameKey="name"
-                                                        strokeWidth={0}
+                                                        stroke="none"
                                                     >
                                                         {reportStatusData.map((entry, i) => (
                                                             <Cell key={i} fill={entry.fill} />
                                                         ))}
                                                     </Pie>
                                                     <Tooltip content={<TooltipBox />} />
-                                                    <Legend
-                                                        iconSize={10}
-                                                        formatter={(val) => (
-                                                            <span style={{ color: "#94a3b8", fontSize: 12 }}>{val}</span>
-                                                        )}
-                                                    />
+                                                    <Legend wrapperStyle={{ fontSize: "12px", color: "#64748b" }} />
                                                 </PieChart>
                                             </ResponsiveContainer>
                                         ) : (
                                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                                                <Typography variant="body2" sx={{ color: "#475569" }}>
-                                                    No reports yet
+                                                <Typography variant="body2" color="text.secondary">
+                                                    No reports available.
                                                 </Typography>
                                             </Box>
                                         )}
-                                    </ChartCard>
+                                    </Paper>
                                 </Grid>
                             )}
                         </Grid>
-
-                        {/* My Activity stat cards */}
-                        <Typography variant="overline" sx={{ color: "#6366f1", fontWeight: 700, letterSpacing: 2, mb: 1.5, display: "block" }}>
-                            My Activity
-                        </Typography>
-
-                        <Grid container spacing={2.5} sx={{ mb: 4 }}>
-                            <Grid item xs={6} sm={3}>
-                                <StatCard label="My Posts" value={stats.userActivity.postsCount} color="#6366f1" />
-                            </Grid>
-                            <Grid item xs={6} sm={3}>
-                                <StatCard label="My Comments" value={stats.userActivity.commentsCount} color="#22d3ee" />
-                            </Grid>
-                            <Grid item xs={6} sm={3}>
-                                <StatCard label="Votes Given" value={stats.userActivity.votesGiven} color="#a855f7" />
-                            </Grid>
-                            <Grid item xs={6} sm={3}>
-                                <StatCard
-                                    label="Upvotes Received"
-                                    value={stats.userActivity.upvotesReceived ?? 0}
-                                    color="#10b981"
-                                    sub={
-                                        stats.userActivity.downvotesReceived > 0
-                                            ? `${stats.userActivity.downvotesReceived} downvotes`
-                                            : null
-                                    }
-                                />
-                            </Grid>
-                        </Grid>
-
-                        {/* Quick Actions */}
-                        <Paper
-                            elevation={0}
-                            sx={{
-                                p: 3,
-                                borderRadius: 3,
-                                background: "linear-gradient(145deg, #1e1e2e 0%, #16162a 100%)",
-                                border: "1px solid rgba(255,255,255,0.06)",
-                            }}
-                        >
-                            <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: "#e2e8f0" }}>
-                                Quick Actions
-                            </Typography>
-                            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-                                <Button
-                                    variant="contained"
-                                    component={Link}
-                                    to="/posts"
-                                    sx={{ bgcolor: "#6366f1", "&:hover": { bgcolor: "#4f46e5" }, borderRadius: 2 }}
-                                >
-                                    View Posts
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    component={Link}
-                                    to="/create-post"
-                                    sx={{ borderColor: "#6366f1", color: "#6366f1", "&:hover": { borderColor: "#818cf8", bgcolor: "rgba(99,102,241,0.08)" }, borderRadius: 2 }}
-                                >
-                                    Create Post
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    component={Link}
-                                    to="/notifications"
-                                    sx={{ borderColor: "#22d3ee", color: "#22d3ee", "&:hover": { borderColor: "#67e8f9", bgcolor: "rgba(34,211,238,0.08)" }, borderRadius: 2 }}
-                                >
-                                    Notifications ({stats.unreadNotifications})
-                                </Button>
-                                {isMentor && (
-                                    <>
-                                        <Button variant="outlined" color="error" component={Link} to="/admin/reports" sx={{ borderRadius: 2 }}>
-                                            Admin Reports
-                                        </Button>
-                                        <Button variant="outlined" color="secondary" component={Link} to="/admin/complaint-responses" sx={{ borderRadius: 2 }}>
-                                            Admin Complaints
-                                        </Button>
-                                    </>
-                                )}
-                            </Box>
-                        </Paper>
                     </>
                 )}
             </Container>
