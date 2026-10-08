@@ -16,10 +16,20 @@ require("./models");
 
 dotenv.config();
 
+// Verify critical environment variables
+const requiredEnvVars = ["JWT_SECRET", "APP_ANON_SECRET", "DATABASE_URL", "FRONTEND_URL"];
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error(`FATAL ERROR: Missing required environment variables: ${missingEnvVars.join(", ")}`);
+  process.exit(1);
+}
+
 const app = express();
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "*",
+    credentials: true,
   })
 );
 
