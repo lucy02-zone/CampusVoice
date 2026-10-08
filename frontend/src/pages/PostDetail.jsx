@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCommentsByPost } from "../api/commentApi";
 import { getPosts } from "../api/postApi";
+import CommentSection from "../components/CommentSection";
 
 const PostDetail = () => {
     const { id } = useParams();
@@ -62,7 +63,7 @@ const PostDetail = () => {
 
             <hr />
 
-            <h2>Comments</h2>
+            <CommentSection postId={post.id} />
 
             {comments.length === 0 ? (
                 <p>No comments yet.</p>
