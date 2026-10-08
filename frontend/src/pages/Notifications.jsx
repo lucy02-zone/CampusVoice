@@ -5,6 +5,7 @@ import {
     Button,
     Card,
     CardContent,
+    CircularProgress,
     Container,
     Typography,
 } from "@mui/material";
@@ -20,6 +21,7 @@ const Notifications = () => {
     const { token } = useAuth();
 
     const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     const loadNotifications = async () => {
@@ -34,6 +36,8 @@ const Notifications = () => {
                 error.response?.data?.message ||
                 "Failed to load notifications"
             );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -60,24 +64,44 @@ const Notifications = () => {
                     Notifications
                 </Typography>
 
-                {error && (
+                {loading && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: 5,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
+
+                {!loading && error && (
                     <Alert severity="error" sx={{ mb: 3 }}>
                         {error}
                     </Alert>
                 )}
 
-                {notifications.length === 0 ? (
-                    <Alert severity="info">
-                        No notifications.
-                    </Alert>
-                ) : (
+                {!loading &&
+                    !error &&
+                    notifications.length === 0 && (
+                        <Alert severity="info">
+                            No notifications.
+                        </Alert>
+                    )}
+
+                {!loading &&
+                    !error &&
                     notifications.map((notification) => (
                         <Card
                             key={notification.id}
                             sx={{ mb: 2 }}
                         >
                             <CardContent>
-                                <Typography variant="body1" sx={{ mb: 1 }}>
+                                <Typography
+                                    variant="body1"
+                                    sx={{ mb: 1 }}
+                                >
                                     {notification.message}
                                 </Typography>
 
@@ -104,8 +128,7 @@ const Notifications = () => {
                                 )}
                             </CardContent>
                         </Card>
-                    ))
-                )}
+                    ))}
             </Box>
         </Container>
     );
