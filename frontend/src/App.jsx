@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Posts from "./pages/Posts";
 import CreatePost from "./pages/CreatePost";
 import PostDetail from "./pages/PostDetail";
+import Notifications from "./pages/Notifications";
 
 const App = () => {
   return (
@@ -33,6 +34,14 @@ const App = () => {
           }
         />
         <Route path="/posts/:id" element={<PostDetail />} />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
