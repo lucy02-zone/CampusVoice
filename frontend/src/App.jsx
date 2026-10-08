@@ -10,7 +10,7 @@ import PostDetail from "./pages/PostDetail";
 import Notifications from "./pages/Notifications";
 import ReportPost from "./pages/ReportPost";
 import AdminReports from "./pages/AdminReports";
-
+import AdminComplaintResponses from "./pages/AdminComplaintResponses";
 const App = () => {
   return (
     <BrowserRouter>
@@ -57,6 +57,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AdminReports />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/complaint-responses"
+          element={
+            <ProtectedRoute>
+              <AdminComplaintResponses />
             </ProtectedRoute>
           }
         />
