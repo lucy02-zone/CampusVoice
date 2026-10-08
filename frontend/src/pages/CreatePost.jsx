@@ -12,6 +12,7 @@ import {
 
 import { createPost } from "../api/postApi";
 import { useAuth } from "../context/AuthContext";
+import { getApiErrorMessage } from "../api/apiError";
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -23,23 +24,61 @@ const CreatePost = () => {
         category: "",
     });
 
+    const [errors, setErrors] = useState({});
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        if (errors[name]) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: "",
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
+        const trimmedTitle = formData.title.trim();
+        const trimmedContent = formData.content.trim();
+        const trimmedCategory = formData.category.trim();
+
+        const validationErrors = {};
+        if (!trimmedTitle) {
+            validationErrors.title = "Title is required";
+        }
+        if (!trimmedContent) {
+            validationErrors.content = "Content is required";
+        }
+        if (!trimmedCategory) {
+            validationErrors.category = "Category is required";
+        }
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        setErrors({});
         setLoading(true);
 
         try {
-            const data = await createPost(formData, token);
+            const data = await createPost(
+                {
+                    title: trimmedTitle,
+                    content: trimmedContent,
+                    category: trimmedCategory,
+                },
+                token
+            );
 
             if (data.success) {
                 navigate("/posts");
@@ -76,6 +115,7 @@ const CreatePost = () => {
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
+                        noValidate
                         sx={{
                             display: "flex",
                             flexDirection: "column",
@@ -87,6 +127,9 @@ const CreatePost = () => {
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
+                            error={Boolean(errors.title)}
+                            helperText={errors.title}
+                            disabled={loading}
                             required
                             fullWidth
                         />
@@ -96,6 +139,9 @@ const CreatePost = () => {
                             name="content"
                             value={formData.content}
                             onChange={handleChange}
+                            error={Boolean(errors.content)}
+                            helperText={errors.content}
+                            disabled={loading}
                             required
                             multiline
                             rows={6}
@@ -107,6 +153,9 @@ const CreatePost = () => {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
+                            error={Boolean(errors.category)}
+                            helperText={errors.category}
+                            disabled={loading}
                             required
                             fullWidth
                         />
