@@ -23,6 +23,7 @@ const Login = () => {
     });
 
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -34,6 +35,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             const data = await loginUser(formData);
@@ -44,6 +46,8 @@ const Login = () => {
             }
         } catch (error) {
             setError(getApiErrorMessage(error, "Login failed"));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,8 +98,9 @@ const Login = () => {
                             type="submit"
                             variant="contained"
                             size="large"
+                            disabled={loading}
                         >
-                            Login
+                            {loading ? "Logging in..." : "Login"}
                         </Button>
                     </Box>
                 </Paper>
