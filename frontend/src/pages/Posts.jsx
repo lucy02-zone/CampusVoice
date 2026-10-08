@@ -11,6 +11,7 @@ import {
     CircularProgress,
     Container,
     Paper,
+    TextField,
     Typography,
 } from "@mui/material";
 
@@ -21,6 +22,7 @@ const Posts = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const loadPosts = async () => {
@@ -54,6 +56,14 @@ const Posts = () => {
             return "";
         }
     };
+
+    const filteredPosts = posts.filter((post) => {
+        const query = searchQuery.trim().toLowerCase();
+        if (!query) return true;
+        const titleMatch = post.title?.toLowerCase().includes(query);
+        const contentMatch = post.content?.toLowerCase().includes(query);
+        return titleMatch || contentMatch;
+    });
 
     return (
         <Container maxWidth="md">
@@ -98,6 +108,17 @@ const Posts = () => {
                     </Alert>
                 )}
 
+                {!loading && !error && (
+                    <TextField
+                        fullWidth
+                        label="Search Posts"
+                        placeholder="Search by title or content..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        sx={{ mb: 3 }}
+                    />
+                )}
+
                 {!loading && !error && posts.length === 0 && (
                     <Paper
                         sx={{
@@ -128,9 +149,34 @@ const Posts = () => {
                     </Paper>
                 )}
 
+                {!loading && !error && posts.length > 0 && filteredPosts.length === 0 && (
+                    <Paper
+                        sx={{
+                            p: 4,
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 2,
+                        }}
+                    >
+                        <Typography variant="h6" color="text.secondary">
+                            No posts found matching "{searchQuery}"
+                        </Typography>
+
+                        <Button
+                            variant="outlined"
+                            onClick={() => setSearchQuery("")}
+                            sx={{ mt: 1 }}
+                        >
+                            Clear Search
+                        </Button>
+                    </Paper>
+                )}
+
                 {!loading &&
                     !error &&
-                    posts.map((post) => (
+                    filteredPosts.map((post) => (
                         <Card key={post.id} sx={{ mb: 3, boxShadow: 2, borderRadius: 2 }}>
                             <CardContent>
                                 <Box
