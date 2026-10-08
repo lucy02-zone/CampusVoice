@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
 import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    Typography,
+} from "@mui/material";
+
+import {
     getNotifications,
     markNotificationAsRead,
 } from "../api/notificationApi";
+
 import { useAuth } from "../context/AuthContext";
 
 const Notifications = () => {
@@ -43,38 +54,60 @@ const Notifications = () => {
     };
 
     return (
-        <div>
-            <h1>Notifications</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Typography variant="h4" gutterBottom>
+                    Notifications
+                </Typography>
 
-            {error && <p>{error}</p>}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 3 }}>
+                        {error}
+                    </Alert>
+                )}
 
-            {notifications.length === 0 ? (
-                <p>No notifications.</p>
-            ) : (
-                notifications.map((notification) => (
-                    <div key={notification.id}>
-                        <p>{notification.message}</p>
+                {notifications.length === 0 ? (
+                    <Alert severity="info">
+                        No notifications.
+                    </Alert>
+                ) : (
+                    notifications.map((notification) => (
+                        <Card
+                            key={notification.id}
+                            sx={{ mb: 2 }}
+                        >
+                            <CardContent>
+                                <Typography variant="body1" sx={{ mb: 1 }}>
+                                    {notification.message}
+                                </Typography>
 
-                        <p>
-                            Status:{" "}
-                            {notification.isRead ? "Read" : "Unread"}
-                        </p>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Status:{" "}
+                                    {notification.isRead
+                                        ? "Read"
+                                        : "Unread"}
+                                </Typography>
 
-                        {!notification.isRead && (
-                            <button
-                                onClick={() =>
-                                    handleMarkAsRead(notification.id)
-                                }
-                            >
-                                Mark as Read
-                            </button>
-                        )}
-
-                        <hr />
-                    </div>
-                ))
-            )}
-        </div>
+                                {!notification.isRead && (
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() =>
+                                            handleMarkAsRead(notification.id)
+                                        }
+                                    >
+                                        Mark as Read
+                                    </Button>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </Box>
+        </Container>
     );
 };
 
