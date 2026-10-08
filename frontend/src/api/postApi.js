@@ -6,6 +6,11 @@ export const getPosts = async () => {
     return response.data;
 };
 
+export const getPostStats = async () => {
+    const response = await api.get("/posts/stats");
+    return response.data;
+};
+
 export const createPost = async (postData, token) => {
     const response = await api.post(
         "/posts",
