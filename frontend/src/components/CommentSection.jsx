@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
-import { getCommentsByPost, createComment } from "../api/commentApi";
+import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    Paper,
+    TextField,
+    Typography,
+} from "@mui/material";
+
+import {
+    getCommentsByPost,
+    createComment,
+} from "../api/commentApi";
+
 import { useAuth } from "../context/AuthContext";
 
 const CommentSection = ({ postId }) => {
@@ -51,37 +65,68 @@ const CommentSection = ({ postId }) => {
     };
 
     return (
-        <div>
-            <h2>Comments</h2>
+        <Box>
+            <Typography variant="h5" sx={{ mb: 3 }}>
+                Comments
+            </Typography>
 
-            {error && <p>{error}</p>}
+            {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
+            )}
 
             {comments.length === 0 ? (
-                <p>No comments yet.</p>
+                <Typography color="text.secondary">
+                    No comments yet.
+                </Typography>
             ) : (
                 comments.map((comment) => (
-                    <div key={comment.id}>
-                        <p>{comment.content}</p>
-                        <hr />
-                    </div>
+                    <Paper
+                        key={comment.id}
+                        sx={{ p: 2, mb: 2 }}
+                        elevation={1}
+                    >
+                        <Typography variant="body1">
+                            {comment.content}
+                        </Typography>
+                    </Paper>
                 ))
             )}
 
             {isAuthenticated && (
-                <form onSubmit={handleSubmit}>
-                    <textarea
-                        placeholder="Write a comment..."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                    />
+                <>
+                    <Divider sx={{ my: 3 }} />
 
-                    <button type="submit">
-                        Add Comment
-                    </button>
-                </form>
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                        }}
+                    >
+                        <TextField
+                            label="Write a comment"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            multiline
+                            rows={3}
+                            required
+                            fullWidth
+                        />
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                        >
+                            Add Comment
+                        </Button>
+                    </Box>
+                </>
             )}
-        </div>
+        </Box>
     );
 };
 
