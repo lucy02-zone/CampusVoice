@@ -1,5 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    Box,
+    Button,
+    Container,
+    TextField,
+    Typography,
+    Alert,
+    Paper,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+} from "@mui/material";
+
 import { registerUser } from "../api/authApi";
 
 const Register = () => {
@@ -33,62 +47,107 @@ const Register = () => {
 
             if (data.success) {
                 setMessage("Registration successful");
-                setTimeout(() => navigate("/login"), 1000);
+
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
             }
         } catch (error) {
             setError(
-                error.response?.data?.message || "Registration failed"
+                error.response?.data?.message ||
+                "Registration failed"
             );
         }
     };
 
     return (
-        <div>
-            <h1>CampusVoice Register</h1>
+        <Container maxWidth="sm">
+            <Box sx={{ mt: 8 }}>
+                <Paper sx={{ p: 4 }}>
+                    <Typography variant="h4" gutterBottom>
+                        Create Account
+                    </Typography>
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                />
+                    {message && (
+                        <Alert severity="success" sx={{ mb: 2 }}>
+                            {message}
+                        </Alert>
+                    )}
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                        }}
+                    >
+                        <TextField
+                            label="Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                        />
 
-                <select
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                >
-                    <option value="STUDENT">Student</option>
-                    <option value="MENTOR">Mentor</option>
-                </select>
+                        <TextField
+                            label="Email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                        />
 
-                <button type="submit">Register</button>
-            </form>
+                        <TextField
+                            label="Password"
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                        />
 
-            {message && <p>{message}</p>}
-            {error && <p>{error}</p>}
-        </div>
+                        <FormControl fullWidth>
+                            <InputLabel>Role</InputLabel>
+
+                            <Select
+                                name="role"
+                                value={formData.role}
+                                label="Role"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="STUDENT">
+                                    Student
+                                </MenuItem>
+
+                                <MenuItem value="MENTOR">
+                                    Mentor
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                        >
+                            Register
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
     );
 };
 
