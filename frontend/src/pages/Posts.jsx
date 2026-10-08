@@ -6,6 +6,7 @@ import {
     Button,
     Card,
     CardContent,
+    CircularProgress,
     Container,
     Typography,
 } from "@mui/material";
@@ -14,6 +15,7 @@ import { getPosts } from "../api/postApi";
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -29,6 +31,8 @@ const Posts = () => {
                     error.response?.data?.message ||
                     "Failed to load posts"
                 );
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -42,17 +46,26 @@ const Posts = () => {
                     CampusVoice Posts
                 </Typography>
 
-                {error && (
+                {loading && (
+                    <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+                        <CircularProgress />
+                    </Box>
+                )}
+
+                {!loading && error && (
                     <Alert severity="error" sx={{ mb: 3 }}>
                         {error}
                     </Alert>
                 )}
 
-                {posts.length === 0 ? (
+                {!loading && !error && posts.length === 0 && (
                     <Alert severity="info">
                         No posts available.
                     </Alert>
-                ) : (
+                )}
+
+                {!loading &&
+                    !error &&
                     posts.map((post) => (
                         <Card key={post.id} sx={{ mb: 3 }}>
                             <CardContent>
@@ -84,8 +97,7 @@ const Posts = () => {
                                 </Button>
                             </CardContent>
                         </Card>
-                    ))
-                )}
+                    ))}
             </Box>
         </Container>
     );
