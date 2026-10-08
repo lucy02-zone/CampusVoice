@@ -5,6 +5,9 @@ import {
     Box,
     Button,
     Container,
+    FormControl,
+    FormHelperText,
+    InputLabel,
     MenuItem,
     Paper,
     Select,
@@ -14,6 +17,7 @@ import {
 
 import { createReport } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
+import { getApiErrorMessage } from "../api/apiError";
 
 const ReportPost = () => {
     const navigate = useNavigate();
@@ -27,14 +31,24 @@ const ReportPost = () => {
         description: "",
     });
 
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        if (errors[name]) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: "",
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -43,28 +57,51 @@ const ReportPost = () => {
         setError("");
         setMessage("");
 
+        if (!postId) {
+            setError("Missing Post ID. Please navigate from a valid post to report.");
+            return;
+        }
+
+        const trimmedReason = formData.reason.trim();
+        const trimmedDescription = formData.description.trim();
+
+        const validationErrors = {};
+        if (!trimmedReason) {
+            validationErrors.reason = "Please select a reason for reporting";
+        }
+        if (!trimmedDescription) {
+            validationErrors.description = "Description is required";
+        }
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        setErrors({});
+        setLoading(true);
+
         try {
             const data = await createReport(
                 {
                     postId,
-                    reason: formData.reason,
-                    description: formData.description,
+                    reason: trimmedReason,
+                    description: trimmedDescription,
                 },
                 token
             );
 
             if (data.success) {
-                setMessage("Report submitted successfully");
+                setMessage(data.message || "Report submitted successfully");
 
                 setTimeout(() => {
                     navigate("/posts");
-                }, 1000);
+                }, 1500);
             }
         } catch (error) {
-            setError(
-                error.response?.data?.message ||
-                "Failed to submit report"
-            );
+            setError(getApiErrorMessage(error, "Failed to submit report"));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -91,45 +128,40 @@ const ReportPost = () => {
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
+                        noValidate
                         sx={{
                             display: "flex",
                             flexDirection: "column",
                             gap: 3,
                         }}
                     >
-                        <Select
-                            name="reason"
-                            value={formData.reason}
-                            onChange={handleChange}
-                            displayEmpty
-                            required
-                        >
-                            <MenuItem value="">
-                                Select reason
-                            </MenuItem>
-
-                            <MenuItem value="SPAM">
-                                Spam
-                            </MenuItem>
-
-                            <MenuItem value="HARASSMENT">
-                                Harassment
-                            </MenuItem>
-
-                            <MenuItem value="INAPPROPRIATE">
-                                Inappropriate Content
-                            </MenuItem>
-
-                            <MenuItem value="OTHER">
-                                Other
-                            </MenuItem>
-                        </Select>
+                        <FormControl fullWidth error={Boolean(errors.reason)} disabled={loading}>
+                            <InputLabel id="report-reason-label">Reason *</InputLabel>
+                            <Select
+                                labelId="report-reason-label"
+                                name="reason"
+                                value={formData.reason}
+                                label="Reason *"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="SPAM">Spam</MenuItem>
+                                <MenuItem value="HARASSMENT">Harassment</MenuItem>
+                                <MenuItem value="INAPPROPRIATE">Inappropriate Content</MenuItem>
+                                <MenuItem value="OTHER">Other</MenuItem>
+                            </Select>
+                            {errors.reason && (
+                                <FormHelperText>{errors.reason}</FormHelperText>
+                            )}
+                        </FormControl>
 
                         <TextField
-                            label="Description"
+                            label="Description *"
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
+                            error={Boolean(errors.description)}
+                            helperText={errors.description}
+                            disabled={loading}
                             multiline
                             rows={5}
                             fullWidth
@@ -139,8 +171,9 @@ const ReportPost = () => {
                             type="submit"
                             variant="contained"
                             size="large"
+                            disabled={loading}
                         >
-                            Submit Report
+                            {loading ? "Submitting..." : "Submit Report"}
                         </Button>
                     </Box>
                 </Paper>
