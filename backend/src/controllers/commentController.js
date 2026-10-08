@@ -1,4 +1,5 @@
 const { Comment } = require("../models");
+const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
 const createComment = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ const createComment = async (req, res) => {
     const comment = await Comment.create({
       postId,
       userId: req.user.id,
-      anonymousId: `ANON-${req.user.id}`,
+      anonymousId: req.user.anonymousHandle || generateAnonymousHandle(req.user.id),
       content,
     });
 

@@ -1,6 +1,7 @@
 const { Post } = require("../models");
 const sequelize = require("../config/database");
 const { Op } = require("sequelize");
+const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
 const createPost = async (req, res) => {
   try {
@@ -15,7 +16,7 @@ const createPost = async (req, res) => {
 
     const post = await Post.create({
       userId: req.user.id,
-      anonymousId: `ANON-${req.user.id}`,
+      anonymousId: req.user.anonymousHandle || generateAnonymousHandle(req.user.id),
       title,
       content,
       category,

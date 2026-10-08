@@ -313,7 +313,7 @@ const Dashboard = () => {
                                 {user?.email}
                             </Typography>
                             <Typography variant="caption" sx={{ opacity: 0.7, display: "block", mt: 0.5 }}>
-                                Anonymous ID: <strong>ANON-{user?.id}</strong>
+                                Anonymous ID: <strong>{user?.anonymousHandle || "—"}</strong>
                             </Typography>
                         </Box>
                         <Chip

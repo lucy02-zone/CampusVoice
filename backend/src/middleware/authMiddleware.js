@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../models");
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -15,7 +16,19 @@ const protect = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = decoded;
+    // Fetch the full user record so controllers have access to anonymousHandle
+    const user = await User.findByPk(decoded.id, {
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    req.user = user;
 
     next();
   } catch (error) {

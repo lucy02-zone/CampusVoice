@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
 const register = async (req, res) => {
   try {
@@ -33,6 +34,10 @@ const register = async (req, res) => {
       role: role || "STUDENT",
     });
 
+    // Generate and persist the anonymous handle now that we have the user id
+    const anonymousHandle = generateAnonymousHandle(user.id);
+    await user.update({ anonymousHandle });
+
     res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -41,6 +46,7 @@ const register = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        anonymousHandle: user.anonymousHandle,
       },
     });
   } catch (error) {
@@ -104,6 +110,7 @@ const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        anonymousHandle: user.anonymousHandle,
       },
     });
   } catch (error) {

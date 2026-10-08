@@ -31,6 +31,12 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: "STUDENT",
     },
+
+    anonymousHandle: {
+      type: DataTypes.STRING,
+      allowNull: true, // null for rows created before this field was added
+      unique: true,
+    },
   },
   {
     tableName: "users",
