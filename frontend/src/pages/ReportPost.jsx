@@ -1,5 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+    Alert,
+    Box,
+    Button,
+    Container,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography,
+} from "@mui/material";
+
 import { createReport } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
 
@@ -57,40 +69,83 @@ const ReportPost = () => {
     };
 
     return (
-        <div>
-            <h1>Report Post</h1>
+        <Container maxWidth="sm">
+            <Box sx={{ mt: 5 }}>
+                <Paper sx={{ p: 4 }}>
+                    <Typography variant="h4" gutterBottom>
+                        Report Post
+                    </Typography>
 
-            <form onSubmit={handleSubmit}>
-                <select
-                    name="reason"
-                    value={formData.reason}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select reason</option>
-                    <option value="SPAM">Spam</option>
-                    <option value="HARASSMENT">Harassment</option>
-                    <option value="INAPPROPRIATE">
-                        Inappropriate Content
-                    </option>
-                    <option value="OTHER">Other</option>
-                </select>
+                    {message && (
+                        <Alert severity="success" sx={{ mb: 2 }}>
+                            {message}
+                        </Alert>
+                    )}
 
-                <textarea
-                    name="description"
-                    placeholder="Describe the issue..."
-                    value={formData.description}
-                    onChange={handleChange}
-                />
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
 
-                <button type="submit">
-                    Submit Report
-                </button>
-            </form>
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 3,
+                        }}
+                    >
+                        <Select
+                            name="reason"
+                            value={formData.reason}
+                            onChange={handleChange}
+                            displayEmpty
+                            required
+                        >
+                            <MenuItem value="">
+                                Select reason
+                            </MenuItem>
 
-            {message && <p>{message}</p>}
-            {error && <p>{error}</p>}
-        </div>
+                            <MenuItem value="SPAM">
+                                Spam
+                            </MenuItem>
+
+                            <MenuItem value="HARASSMENT">
+                                Harassment
+                            </MenuItem>
+
+                            <MenuItem value="INAPPROPRIATE">
+                                Inappropriate Content
+                            </MenuItem>
+
+                            <MenuItem value="OTHER">
+                                Other
+                            </MenuItem>
+                        </Select>
+
+                        <TextField
+                            label="Description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            multiline
+                            rows={5}
+                            fullWidth
+                        />
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                        >
+                            Submit Report
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
     );
 };
 
