@@ -9,6 +9,7 @@ import CreatePost from "./pages/CreatePost";
 import PostDetail from "./pages/PostDetail";
 import Notifications from "./pages/Notifications";
 import ReportPost from "./pages/ReportPost";
+import AdminReports from "./pages/AdminReports";
 
 const App = () => {
   return (
@@ -48,6 +49,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ReportPost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute>
+              <AdminReports />
             </ProtectedRoute>
           }
         />
