@@ -39,6 +39,7 @@ const Navbar = () => {
         { label: "Posts", path: "/posts" },
         ...(isAuthenticated
             ? [
+                  { label: "Dashboard", path: "/dashboard" },
                   { label: "Create Post", path: "/create-post" },
                   { label: "Notifications", path: "/notifications" },
                   ...(isMentor
