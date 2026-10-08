@@ -7,11 +7,14 @@ import {
     Chip,
     CircularProgress,
     Container,
+    Divider,
+    Paper,
     Typography,
 } from "@mui/material";
 
 import { getComplaintResponses } from "../api/complaintResponseApi";
 import { useAuth } from "../context/AuthContext";
+import { getApiErrorMessage } from "../api/apiError";
 
 const AdminComplaintResponses = () => {
     const { token } = useAuth();
@@ -22,6 +25,7 @@ const AdminComplaintResponses = () => {
 
     useEffect(() => {
         const loadResponses = async () => {
+            setError("");
             try {
                 const data = await getComplaintResponses(token);
 
@@ -30,22 +34,58 @@ const AdminComplaintResponses = () => {
                 }
             } catch (error) {
                 setError(
-                    error.response?.data?.message ||
-                    "Failed to load complaint responses"
+                    getApiErrorMessage(
+                        error,
+                        "Failed to load complaint responses"
+                    )
                 );
             } finally {
                 setLoading(false);
             }
         };
 
-        loadResponses();
+        if (token) {
+            loadResponses();
+        }
     }, [token]);
+
+    const getStatusChipColor = (status) => {
+        switch (status?.toUpperCase()) {
+            case "RESOLVED":
+            case "COMPLETED":
+            case "ANSWERED":
+                return "success";
+            case "PENDING":
+            case "IN_PROGRESS":
+                return "warning";
+            case "REJECTED":
+            case "CLOSED":
+                return "error";
+            default:
+                return "default";
+        }
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        try {
+            return new Date(dateString).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            });
+        } catch {
+            return "";
+        }
+    };
 
     return (
         <Container maxWidth="md">
-            <Box sx={{ mt: 5 }}>
+            <Box sx={{ mt: 5, mb: 4 }}>
                 <Typography variant="h4" gutterBottom>
-                    Complaint Responses
+                    Complaint Responses Admin
                 </Typography>
 
                 {loading && (
@@ -53,7 +93,8 @@ const AdminComplaintResponses = () => {
                         sx={{
                             display: "flex",
                             justifyContent: "center",
-                            mt: 5,
+                            alignItems: "center",
+                            my: 5,
                         }}
                     >
                         <CircularProgress />
@@ -66,28 +107,76 @@ const AdminComplaintResponses = () => {
                     </Alert>
                 )}
 
-                {!loading &&
-                    !error &&
-                    responses.length === 0 && (
-                        <Alert severity="info">
+                {!loading && !error && responses.length === 0 && (
+                    <Paper
+                        sx={{
+                            p: 5,
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 2,
+                            mt: 2,
+                        }}
+                    >
+                        <Typography variant="h6" color="text.secondary">
                             No complaint responses available.
-                        </Alert>
-                    )}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            There are currently no recorded complaint responses to review.
+                        </Typography>
+                    </Paper>
+                )}
 
                 {!loading &&
                     !error &&
                     responses.map((item) => (
-                        <Card key={item.id} sx={{ mb: 2 }}>
+                        <Card key={item.id} sx={{ mb: 3, boxShadow: 2, borderRadius: 2 }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Complaint #{item.complaintId}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        mb: 1.5,
+                                    }}
+                                >
+                                    <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
+                                        Complaint #{item.complaintId}
+                                    </Typography>
 
-                                <Typography sx={{ mb: 2 }}>
+                                    {item.status && (
+                                        <Chip
+                                            label={item.status}
+                                            color={getStatusChipColor(item.status)}
+                                            size="small"
+                                        />
+                                    )}
+                                </Box>
+
+                                {item.createdAt && (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        sx={{ mb: 2 }}
+                                    >
+                                        Responded on: {formatDate(item.createdAt)}
+                                    </Typography>
+                                )}
+
+                                <Divider sx={{ my: 1.5 }} />
+
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        lineHeight: 1.6,
+                                        whiteSpace: "pre-line",
+                                        color: "text.primary",
+                                    }}
+                                >
                                     {item.response}
                                 </Typography>
-
-                                <Chip label={item.status} />
                             </CardContent>
                         </Card>
                     ))}
