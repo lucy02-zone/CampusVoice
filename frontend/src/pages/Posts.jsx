@@ -5,7 +5,9 @@ import {
     Box,
     Button,
     Card,
+    CardActions,
     CardContent,
+    Chip,
     CircularProgress,
     Container,
     Paper,
@@ -39,6 +41,19 @@ const Posts = () => {
 
         loadPosts();
     }, []);
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        try {
+            return new Date(dateString).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+        } catch {
+            return "";
+        }
+    };
 
     return (
         <Container maxWidth="md">
@@ -116,35 +131,76 @@ const Posts = () => {
                 {!loading &&
                     !error &&
                     posts.map((post) => (
-                        <Card key={post.id} sx={{ mb: 3 }}>
+                        <Card key={post.id} sx={{ mb: 3, boxShadow: 2, borderRadius: 2 }}>
                             <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    {post.title}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "flex-start",
+                                        mb: 1.5,
+                                        gap: 1,
+                                    }}
+                                >
+                                    <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+                                        {post.title}
+                                    </Typography>
+
+                                    {post.category && (
+                                        <Chip
+                                            label={post.category}
+                                            color="primary"
+                                            size="small"
+                                            variant="outlined"
+                                        />
+                                    )}
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        mb: 2,
+                                        color: "text.secondary",
+                                    }}
+                                >
+                                    <Typography variant="caption" color="text.secondary">
+                                        Author: <strong>{post.anonymousId || "Anonymous"}</strong>
+                                    </Typography>
+
+                                    {post.createdAt && (
+                                        <Typography variant="caption" color="text.secondary">
+                                            {formatDate(post.createdAt)}
+                                        </Typography>
+                                    )}
+                                </Box>
 
                                 <Typography
                                     variant="body1"
-                                    sx={{ mb: 2 }}
+                                    color="text.primary"
+                                    sx={{
+                                        mb: 1,
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }}
                                 >
                                     {post.content}
                                 </Typography>
+                            </CardContent>
 
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ mb: 2 }}
-                                >
-                                    Category: {post.category}
-                                </Typography>
-
+                            <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
                                 <Button
                                     variant="contained"
                                     component={Link}
                                     to={`/posts/${post.id}`}
+                                    size="small"
                                 >
                                     View Post
                                 </Button>
-                            </CardContent>
+                            </CardActions>
                         </Card>
                     ))}
             </Box>
