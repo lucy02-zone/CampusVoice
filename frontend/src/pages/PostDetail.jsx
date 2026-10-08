@@ -3,16 +3,18 @@ import { useParams } from "react-router-dom";
 import { getCommentsByPost } from "../api/commentApi";
 import { getPosts } from "../api/postApi";
 import CommentSection from "../components/CommentSection";
+import { votePost } from "../api/voteApi";
+import { useAuth } from "../context/AuthContext";
 
 const PostDetail = () => {
     const { id } = useParams();
+    const { token, isAuthenticated } = useAuth();
 
     const [post, setPost] = useState(null);
-    const [comments, setComments] = useState([]);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        const loadData = async () => {
+        const loadPost = async () => {
             try {
                 const postData = await getPosts();
 
@@ -28,12 +30,6 @@ const PostDetail = () => {
 
                     setPost(foundPost);
                 }
-
-                const commentData = await getCommentsByPost(id);
-
-                if (commentData.success) {
-                    setComments(commentData.comments);
-                }
             } catch (error) {
                 setError(
                     error.response?.data?.message ||
@@ -42,8 +38,27 @@ const PostDetail = () => {
             }
         };
 
-        loadData();
+        loadPost();
     }, [id]);
+
+    const handleVote = async (voteType) => {
+        try {
+            await votePost(
+                {
+                    postId: post.id,
+                    voteType,
+                },
+                token
+            );
+
+            alert(`${voteType} recorded successfully`);
+        } catch (error) {
+            setError(
+                error.response?.data?.message ||
+                "Failed to submit vote"
+            );
+        }
+    };
 
     if (error) {
         return <p>{error}</p>;
@@ -61,20 +76,21 @@ const PostDetail = () => {
 
             <p>Category: {post.category}</p>
 
+            {isAuthenticated && (
+                <div>
+                    <button onClick={() => handleVote("UPVOTE")}>
+                        👍 Upvote
+                    </button>
+
+                    <button onClick={() => handleVote("DOWNVOTE")}>
+                        👎 Downvote
+                    </button>
+                </div>
+            )}
+
             <hr />
 
             <CommentSection postId={post.id} />
-
-            {comments.length === 0 ? (
-                <p>No comments yet.</p>
-            ) : (
-                comments.map((comment) => (
-                    <div key={comment.id}>
-                        <p>{comment.content}</p>
-                        <hr />
-                    </div>
-                ))
-            )}
         </div>
     );
 };
