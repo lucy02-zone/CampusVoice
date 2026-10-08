@@ -5,6 +5,7 @@ import {
     Card,
     CardContent,
     Chip,
+    CircularProgress,
     Container,
     Typography,
 } from "@mui/material";
@@ -16,6 +17,7 @@ const AdminReports = () => {
     const { token } = useAuth();
 
     const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -31,6 +33,8 @@ const AdminReports = () => {
                     error.response?.data?.message ||
                     "Failed to load reports"
                 );
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -44,17 +48,34 @@ const AdminReports = () => {
                     Reported Posts
                 </Typography>
 
-                {error && (
+                {loading && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: 5,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
+
+                {!loading && error && (
                     <Alert severity="error" sx={{ mb: 3 }}>
                         {error}
                     </Alert>
                 )}
 
-                {reports.length === 0 ? (
-                    <Alert severity="info">
-                        No reports available.
-                    </Alert>
-                ) : (
+                {!loading &&
+                    !error &&
+                    reports.length === 0 && (
+                        <Alert severity="info">
+                            No reports available.
+                        </Alert>
+                    )}
+
+                {!loading &&
+                    !error &&
                     reports.map((report) => (
                         <Card key={report.id} sx={{ mb: 2 }}>
                             <CardContent>
@@ -81,8 +102,7 @@ const AdminReports = () => {
                                 />
                             </CardContent>
                         </Card>
-                    ))
-                )}
+                    ))}
             </Box>
         </Container>
     );
