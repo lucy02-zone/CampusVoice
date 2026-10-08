@@ -10,7 +10,11 @@ import {
     Chip,
     CircularProgress,
     Container,
+    FormControl,
+    InputLabel,
+    MenuItem,
     Paper,
+    Select,
     TextField,
     Typography,
 } from "@mui/material";
@@ -23,6 +27,7 @@ const Posts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("ALL");
 
     useEffect(() => {
         const loadPosts = async () => {
@@ -57,12 +62,26 @@ const Posts = () => {
         }
     };
 
+    const categories = [
+        "ALL",
+        ...Array.from(
+            new Set(posts.map((post) => post.category).filter(Boolean))
+        ),
+    ];
+
     const filteredPosts = posts.filter((post) => {
         const query = searchQuery.trim().toLowerCase();
-        if (!query) return true;
-        const titleMatch = post.title?.toLowerCase().includes(query);
-        const contentMatch = post.content?.toLowerCase().includes(query);
-        return titleMatch || contentMatch;
+
+        const matchesSearch =
+            !query ||
+            post.title?.toLowerCase().includes(query) ||
+            post.content?.toLowerCase().includes(query);
+
+        const matchesCategory =
+            selectedCategory === "ALL" ||
+            post.category?.toLowerCase() === selectedCategory.toLowerCase();
+
+        return matchesSearch && matchesCategory;
     });
 
     return (
@@ -109,14 +128,41 @@ const Posts = () => {
                 )}
 
                 {!loading && !error && (
-                    <TextField
-                        fullWidth
-                        label="Search Posts"
-                        placeholder="Search by title or content..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        sx={{ mb: 3 }}
-                    />
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mb: 3,
+                            flexDirection: { xs: "column", sm: "row" },
+                        }}
+                    >
+                        <TextField
+                            fullWidth
+                            label="Search Posts"
+                            placeholder="Search by title or content..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+
+                        <FormControl sx={{ minWidth: { xs: "100%", sm: 200 } }}>
+                            <InputLabel id="category-filter-label">Category</InputLabel>
+                            <Select
+                                labelId="category-filter-label"
+                                value={selectedCategory}
+                                label="Category"
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                            >
+                                <MenuItem value="ALL">All Categories</MenuItem>
+                                {categories
+                                    .filter((cat) => cat !== "ALL")
+                                    .map((category) => (
+                                        <MenuItem key={category} value={category}>
+                                            {category}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 )}
 
                 {!loading && !error && posts.length === 0 && (
@@ -161,15 +207,18 @@ const Posts = () => {
                         }}
                     >
                         <Typography variant="h6" color="text.secondary">
-                            No posts found matching "{searchQuery}"
+                            No posts found.
                         </Typography>
 
                         <Button
                             variant="outlined"
-                            onClick={() => setSearchQuery("")}
+                            onClick={() => {
+                                setSearchQuery("");
+                                setSelectedCategory("ALL");
+                            }}
                             sx={{ mt: 1 }}
                         >
-                            Clear Search
+                            Clear Filters
                         </Button>
                     </Paper>
                 )}
