@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Posts from "./pages/Posts";
 import CreatePost from "./pages/CreatePost";
+import PostDetail from "./pages/PostDetail";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/posts/:id" element={<PostDetail />} />
       </Routes>
     </BrowserRouter>
   );

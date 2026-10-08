@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getPosts } from "../api/postApi";
+import { Link } from "react-router-dom";
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -37,6 +38,9 @@ const Posts = () => {
                         <h2>{post.title}</h2>
                         <p>{post.content}</p>
                         <p>Category: {post.category}</p>
+                        <Link to={`/posts/${post.id}`}>
+                            View Post
+                        </Link>
                         <hr />
                     </div>
                 ))
