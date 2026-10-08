@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { getPosts } from "../api/postApi";
 import { Link } from "react-router-dom";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    Typography,
+} from "@mui/material";
+
+import { getPosts } from "../api/postApi";
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -16,7 +26,8 @@ const Posts = () => {
                 }
             } catch (error) {
                 setError(
-                    error.response?.data?.message || "Failed to load posts"
+                    error.response?.data?.message ||
+                    "Failed to load posts"
                 );
             }
         };
@@ -25,27 +36,58 @@ const Posts = () => {
     }, []);
 
     return (
-        <div>
-            <h1>CampusVoice Posts</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Typography variant="h4" gutterBottom>
+                    CampusVoice Posts
+                </Typography>
 
-            {error && <p>{error}</p>}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 3 }}>
+                        {error}
+                    </Alert>
+                )}
 
-            {posts.length === 0 ? (
-                <p>No posts available.</p>
-            ) : (
-                posts.map((post) => (
-                    <div key={post.id}>
-                        <h2>{post.title}</h2>
-                        <p>{post.content}</p>
-                        <p>Category: {post.category}</p>
-                        <Link to={`/posts/${post.id}`}>
-                            View Post
-                        </Link>
-                        <hr />
-                    </div>
-                ))
-            )}
-        </div>
+                {posts.length === 0 ? (
+                    <Alert severity="info">
+                        No posts available.
+                    </Alert>
+                ) : (
+                    posts.map((post) => (
+                        <Card key={post.id} sx={{ mb: 3 }}>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom>
+                                    {post.title}
+                                </Typography>
+
+                                <Typography
+                                    variant="body1"
+                                    sx={{ mb: 2 }}
+                                >
+                                    {post.content}
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Category: {post.category}
+                                </Typography>
+
+                                <Button
+                                    variant="contained"
+                                    component={Link}
+                                    to={`/posts/${post.id}`}
+                                >
+                                    View Post
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </Box>
+        </Container>
     );
 };
 
