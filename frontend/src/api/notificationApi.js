@@ -1,10 +1,9 @@
 import api from "./axios";
+import { authHeaders } from "./apiHelpers";
 
 export const getNotifications = async (token) => {
     const response = await api.get("/notifications", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders(token),
     });
 
     return response.data;
@@ -15,9 +14,7 @@ export const markNotificationAsRead = async (id, token) => {
         `/notifications/${id}/read`,
         {},
         {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: authHeaders(token),
         }
     );
 
