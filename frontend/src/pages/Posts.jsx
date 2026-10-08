@@ -8,10 +8,12 @@ import {
     CardContent,
     CircularProgress,
     Container,
+    Paper,
     Typography,
 } from "@mui/material";
 
 import { getPosts } from "../api/postApi";
+import { getApiErrorMessage } from "../api/apiError";
 
 const Posts = () => {
     const [posts, setPosts] = useState([]);
@@ -28,8 +30,7 @@ const Posts = () => {
                 }
             } catch (error) {
                 setError(
-                    error.response?.data?.message ||
-                    "Failed to load posts"
+                    getApiErrorMessage(error, "Failed to load posts")
                 );
             } finally {
                 setLoading(false);
@@ -41,13 +42,37 @@ const Posts = () => {
 
     return (
         <Container maxWidth="md">
-            <Box sx={{ mt: 5 }}>
-                <Typography variant="h4" gutterBottom>
-                    CampusVoice Posts
-                </Typography>
+            <Box sx={{ mt: 5, mb: 4 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 3,
+                    }}
+                >
+                    <Typography variant="h4">
+                        CampusVoice Posts
+                    </Typography>
+
+                    <Button
+                        variant="contained"
+                        component={Link}
+                        to="/create-post"
+                    >
+                        Create Post
+                    </Button>
+                </Box>
 
                 {loading && (
-                    <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            my: 5,
+                        }}
+                    >
                         <CircularProgress />
                     </Box>
                 )}
@@ -59,9 +84,33 @@ const Posts = () => {
                 )}
 
                 {!loading && !error && posts.length === 0 && (
-                    <Alert severity="info">
-                        No posts available.
-                    </Alert>
+                    <Paper
+                        sx={{
+                            p: 5,
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 2,
+                        }}
+                    >
+                        <Typography variant="h6" color="text.secondary">
+                            No posts available.
+                        </Typography>
+
+                        <Typography variant="body2" color="text.secondary">
+                            Be the first to share your campus experience!
+                        </Typography>
+
+                        <Button
+                            variant="contained"
+                            component={Link}
+                            to="/create-post"
+                            sx={{ mt: 1 }}
+                        >
+                            Create Post
+                        </Button>
+                    </Paper>
                 )}
 
                 {!loading &&
