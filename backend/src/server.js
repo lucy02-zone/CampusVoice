@@ -8,6 +8,7 @@ const voteRoutes = require("./routes/voteRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const complaintResponseRoutes = require("./routes/complaintResponseRoutes");
+const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
@@ -42,6 +43,7 @@ app.use("/api/votes", voteRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/complaint-responses", complaintResponseRoutes);
+app.use("/api/users", userRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {

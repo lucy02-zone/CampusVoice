@@ -20,6 +20,7 @@ import { getPosts } from "../api/postApi";
 import { getNotifications } from "../api/notificationApi";
 import { getReports } from "../api/reportApi";
 import { getComplaintResponses } from "../api/complaintResponseApi";
+import { getUserStats } from "../api/userApi";
 import { getApiErrorMessage } from "../api/apiError";
 
 const Dashboard = () => {
@@ -33,6 +34,12 @@ const Dashboard = () => {
         totalReports: 0,
         pendingReports: 0,
         totalResponses: 0,
+        userActivity: {
+            postsCount: 0,
+            commentsCount: 0,
+            votesGiven: 0,
+            reputation: 0,
+        },
     });
 
     const [loading, setLoading] = useState(true);
@@ -77,6 +84,16 @@ const Dashboard = () => {
                     }
                 }
 
+                // Fetch User Stats
+                let userStatsRes = {};
+                if (token) {
+                    try {
+                        userStatsRes = await getUserStats();
+                    } catch (e) {
+                        console.error("Failed to fetch user stats", e);
+                    }
+                }
+
                 setStats({
                     totalPosts: postsList.length,
                     totalCategories: categoriesSet.size,
@@ -87,6 +104,7 @@ const Dashboard = () => {
                         (r) => (r.status || "PENDING").toUpperCase() === "PENDING"
                     ).length,
                     totalResponses: responsesList.length,
+                    userActivity: userStatsRes.success ? userStatsRes.stats : stats.userActivity,
                 });
             } catch (err) {
                 setError(getApiErrorMessage(err, "Failed to load dashboard data"));
@@ -263,6 +281,64 @@ const Dashboard = () => {
                                     </Grid>
                                 </>
                             )}
+                        </Grid>
+
+                        <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+                            My Activity
+                        </Typography>
+
+                        <Grid container spacing={3} sx={{ mb: 4 }}>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <Card sx={{ boxShadow: 2, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            My Posts
+                                        </Typography>
+                                        <Typography variant="h4" sx={{ fontWeight: 700, mt: 1, color: "primary.main" }}>
+                                            {stats.userActivity.postsCount}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            
+                            <Grid item xs={12} sm={6} md={3}>
+                                <Card sx={{ boxShadow: 2, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            My Comments
+                                        </Typography>
+                                        <Typography variant="h4" sx={{ fontWeight: 700, mt: 1, color: "info.main" }}>
+                                            {stats.userActivity.commentsCount}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={3}>
+                                <Card sx={{ boxShadow: 2, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            Votes Given
+                                        </Typography>
+                                        <Typography variant="h4" sx={{ fontWeight: 700, mt: 1, color: "secondary.main" }}>
+                                            {stats.userActivity.votesGiven}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={3}>
+                                <Card sx={{ boxShadow: 2, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            My Reputation
+                                        </Typography>
+                                        <Typography variant="h4" sx={{ fontWeight: 700, mt: 1, color: "success.main" }}>
+                                            {stats.userActivity.reputation}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         </Grid>
 
                         <Paper sx={{ p: 3, borderRadius: 2 }} elevation={1}>
