@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCommentsByPost } from "../api/commentApi";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    Typography,
+} from "@mui/material";
+
 import { getPosts } from "../api/postApi";
 import CommentSection from "../components/CommentSection";
 import { votePost } from "../api/voteApi";
@@ -51,7 +60,7 @@ const PostDetail = () => {
                 token
             );
 
-            alert(`${voteType} recorded successfully`);
+            setError("");
         } catch (error) {
             setError(
                 error.response?.data?.message ||
@@ -60,38 +69,82 @@ const PostDetail = () => {
         }
     };
 
-    if (error) {
-        return <p>{error}</p>;
+    if (error && !post) {
+        return (
+            <Container maxWidth="md">
+                <Alert severity="error" sx={{ mt: 5 }}>
+                    {error}
+                </Alert>
+            </Container>
+        );
     }
 
     if (!post) {
-        return <p>Loading...</p>;
+        return (
+            <Container maxWidth="md">
+                <Typography sx={{ mt: 5 }}>
+                    Loading...
+                </Typography>
+            </Container>
+        );
     }
 
     return (
-        <div>
-            <h1>{post.title}</h1>
+        <Container maxWidth="md">
+            <Box sx={{ mt: 5 }}>
+                <Card>
+                    <CardContent>
+                        <Typography variant="h4" gutterBottom>
+                            {post.title}
+                        </Typography>
 
-            <p>{post.content}</p>
+                        <Typography
+                            variant="body1"
+                            sx={{ mb: 3 }}
+                        >
+                            {post.content}
+                        </Typography>
 
-            <p>Category: {post.category}</p>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mb: 3 }}
+                        >
+                            Category: {post.category}
+                        </Typography>
 
-            {isAuthenticated && (
-                <div>
-                    <button onClick={() => handleVote("UPVOTE")}>
-                        👍 Upvote
-                    </button>
+                        {error && (
+                            <Alert severity="error" sx={{ mb: 2 }}>
+                                {error}
+                            </Alert>
+                        )}
 
-                    <button onClick={() => handleVote("DOWNVOTE")}>
-                        👎 Downvote
-                    </button>
-                </div>
-            )}
+                        {isAuthenticated && (
+                            <Box sx={{ mb: 4 }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => handleVote("UPVOTE")}
+                                    sx={{ mr: 2 }}
+                                >
+                                    👍 Upvote
+                                </Button>
 
-            <hr />
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        handleVote("DOWNVOTE")
+                                    }
+                                >
+                                    👎 Downvote
+                                </Button>
+                            </Box>
+                        )}
 
-            <CommentSection postId={post.id} />
-        </div>
+                        <CommentSection postId={post.id} />
+                    </CardContent>
+                </Card>
+            </Box>
+        </Container>
     );
 };
 
