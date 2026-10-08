@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 import { registerUser } from "../api/authApi";
-
+import { getApiErrorMessage } from "../api/apiError";
 const Register = () => {
     const navigate = useNavigate();
 
@@ -53,10 +53,7 @@ const Register = () => {
                 }, 1000);
             }
         } catch (error) {
-            setError(
-                error.response?.data?.message ||
-                "Registration failed"
-            );
+            setError(getApiErrorMessage(error, "Registration failed"));
         }
     };
 
