@@ -24,6 +24,7 @@ const CreatePost = () => {
     });
 
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -35,6 +36,7 @@ const CreatePost = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             const data = await createPost(formData, token);
@@ -43,10 +45,9 @@ const CreatePost = () => {
                 navigate("/posts");
             }
         } catch (error) {
-            setError(
-                error.response?.data?.message ||
-                "Failed to create post"
-            );
+            setError(getApiErrorMessage(error, "Failed to create post"));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -114,8 +115,9 @@ const CreatePost = () => {
                             type="submit"
                             variant="contained"
                             size="large"
+                            disabled={loading}
                         >
-                            Publish Post
+                            {loading ? "Posting..." : "Create Post"}
                         </Button>
                     </Box>
                 </Paper>
