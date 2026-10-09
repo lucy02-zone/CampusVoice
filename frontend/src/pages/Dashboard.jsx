@@ -10,11 +10,10 @@ import {
     Chip,
     CircularProgress,
     Container,
+    Divider,
     Grid,
     Paper,
     Typography,
-    Divider,
-    useTheme,
 } from "@mui/material";
 import {
     AreaChart,
@@ -24,8 +23,6 @@ import {
     PieChart,
     Pie,
     Cell,
-    RadialBarChart,
-    RadialBar,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -42,98 +39,117 @@ import { getComplaintResponses } from "../api/complaintResponseApi";
 import { getUserStats } from "../api/userApi";
 import { getApiErrorMessage } from "../api/apiError";
 
-const CHART_COLORS = ["#1976d2", "#00bcd4", "#4caf50", "#ff9800", "#f44336", "#9c27b0"];
+const COLORS = ["#4F46E5", "#0891B2", "#059669", "#D97706", "#DC2626"];
 
-const TooltipBox = ({ active, payload, label }) => {
-    if (!active || !payload?.length) return null;
-    return (
-        <Paper
-            elevation={3}
-            sx={{
-                p: 2,
-                borderRadius: 2,
-                bgcolor: "background.paper",
-                border: "1px solid",
-                borderColor: "divider",
-            }}
-        >
-            {label && (
-                <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1, fontWeight: 600 }}>
-                    {label}
-                </Typography>
-            )}
-            {payload.map((entry, i) => (
-                <Typography key={i} variant="body2" sx={{ color: entry.color || "text.primary", fontWeight: 500 }}>
-                    {entry.name}: {entry.value}
-                </Typography>
-            ))}
-        </Paper>
-    );
-};
+const formatNumber = (value) => Number(value ?? 0).toLocaleString();
 
-const StatCard = ({ label, value, color = "primary.main", sub }) => (
+const StatCard = ({ label, value, accent, caption }) => (
     <Card
         elevation={0}
         sx={{
             height: "100%",
-            borderRadius: 3,
-            bgcolor: "background.paper",
-            border: "1px solid",
-            borderColor: "divider",
-            transition: "all 0.2s ease-in-out",
+            border: "1px solid #E5E7EB",
+            borderRadius: 2,
+            bgcolor: "#FFFFFF",
+            transition: "border-color 180ms ease, box-shadow 180ms ease",
             "&:hover": {
-                transform: "translateY(-4px)",
-                boxShadow: "0 12px 24px -10px rgba(0,0,0,0.1)",
-                borderColor: color,
+                borderColor: accent,
+                boxShadow: "0 4px 14px rgba(15, 23, 42, 0.05)",
             },
         }}
     >
-        <CardContent sx={{ p: 3 }}>
-            <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 0.5 }}>
+        <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
+            <Box
+                sx={{
+                    width: 34,
+                    height: 4,
+                    borderRadius: 2,
+                    bgcolor: accent,
+                    mb: 2,
+                }}
+            />
+
+            <Typography
+                sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#64748B",
+                    letterSpacing: 0.5,
+                    textTransform: "uppercase",
+                }}
+            >
                 {label}
             </Typography>
-            <Typography variant="h3" sx={{ fontWeight: 700, mt: 1, mb: 0.5, color: "text.primary" }}>
-                {value}
+
+            <Typography
+                sx={{
+                    fontSize: 30,
+                    fontWeight: 700,
+                    color: "#172033",
+                    lineHeight: 1.5,
+                    mt: 0.5,
+                    fontVariantNumeric: "tabular-nums",
+                }}
+            >
+                {formatNumber(value)}
             </Typography>
-            {sub ? (
-                <Typography variant="caption" sx={{ color: color, fontWeight: 500 }}>
-                    {sub}
-                </Typography>
-            ) : (
-                <Typography variant="caption" color="text.disabled">
-                    Updated just now
-                </Typography>
-            )}
+
+            <Typography sx={{ fontSize: 12, color: "#94A3B8", mt: 0.5 }}>
+                {caption || "Current total"}
+            </Typography>
         </CardContent>
     </Card>
 );
 
-const ChartCard = ({ title, children, height = 300 }) => (
+const ChartPanel = ({ title, subtitle, children, height = 280 }) => (
     <Paper
         elevation={0}
         sx={{
-            p: 3,
-            borderRadius: 3,
-            bgcolor: "background.paper",
-            border: "1px solid",
-            borderColor: "divider",
             height: "100%",
-            display: "flex",
-            flexDirection: "column",
+            p: { xs: 2, md: 2.5 },
+            border: "1px solid #E5E7EB",
+            borderRadius: 2,
+            bgcolor: "#FFFFFF",
+            minWidth: 0,
         }}
     >
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: "text.primary" }}>
+        <Typography
+            sx={{ fontSize: 15, fontWeight: 700, color: "#172033" }}
+        >
             {title}
         </Typography>
-        <Box sx={{ width: "100%", height, flexGrow: 1 }}>
+
+        {subtitle && (
+            <Typography sx={{ fontSize: 12, color: "#94A3B8", mt: 0.5, mb: 2 }}>
+                {subtitle}
+            </Typography>
+        )}
+
+        <Box sx={{ width: "100%", height, mt: subtitle ? 0 : 2 }}>
             {children}
         </Box>
     </Paper>
 );
 
+const EmptyChart = ({ message = "No data available yet." }) => (
+    <Box
+        sx={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            px: 2,
+        }}
+    >
+        <Typography sx={{ fontSize: 13, color: "#94A3B8", textAlign: "center" }}>
+            {message}
+        </Typography>
+    </Box>
+);
+
 const Dashboard = () => {
     const { user, token } = useAuth();
-    const theme = useTheme();
+    const isMentor = user?.role === "MENTOR";
 
     const [stats, setStats] = useState({
         totalPosts: 0,
@@ -159,347 +175,711 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const isMentor = user?.role === "MENTOR";
-
     useEffect(() => {
+        let active = true;
+
         const fetchDashboardData = async () => {
             setLoading(true);
             setError("");
 
             try {
-                const [postsRes, postStatsRes] = await Promise.allSettled([
+                const [postsResult, postStatsResult] = await Promise.allSettled([
                     getPosts(),
                     getPostStats(),
                 ]);
 
-                const postsList =
-                    postsRes.status === "fulfilled" && postsRes.value?.success
-                        ? postsRes.value.posts
-                        : [];
+                if (!active) return;
 
-                const categoriesSet = new Set(postsList.map((p) => p.category).filter(Boolean));
-
-                if (postStatsRes.status === "fulfilled" && postStatsRes.value?.success) {
-                    setPostsPerDay(postStatsRes.value.postsPerDay || []);
-                    setCategoryDistribution(postStatsRes.value.categoryDistribution || []);
+                if (postsResult.status === "rejected") {
+                    throw postsResult.reason;
                 }
 
-                let notifsList = [];
+                const postsResponse = postsResult.value;
+
+                if (!postsResponse?.success) {
+                    throw new Error("Unable to load posts.");
+                }
+
+                const posts = postsResponse.posts || [];
+                const categories = new Set(
+                    posts.map((post) => post.category).filter(Boolean)
+                );
+
+                if (
+                    postStatsResult.status === "fulfilled" &&
+                    postStatsResult.value?.success
+                ) {
+                    setPostsPerDay(postStatsResult.value.postsPerDay || []);
+                    setCategoryDistribution(
+                        postStatsResult.value.categoryDistribution || []
+                    );
+                } else {
+                    setPostsPerDay([]);
+                    setCategoryDistribution([]);
+                }
+
+                let notifications = [];
+                let reports = [];
+                let responses = [];
+
+                const optionalRequests = [];
+
                 if (token) {
-                    try {
-                        const notifRes = await getNotifications(token);
-                        if (notifRes.success) notifsList = notifRes.notifications;
-                    } catch { /* ignore */ }
+                    optionalRequests.push(
+                        getNotifications(token)
+                            .then((result) => {
+                                if (result?.success) {
+                                    notifications = result.notifications || [];
+                                }
+                            })
+                            .catch(() => { })
+                    );
+
+                    optionalRequests.push(
+                        getUserStats()
+                            .then((result) => {
+                                if (result?.success && active) {
+                                    setStats((previous) => ({
+                                        ...previous,
+                                        userActivity: {
+                                            ...previous.userActivity,
+                                            ...result.stats,
+                                        },
+                                    }));
+                                }
+                            })
+                            .catch(() => { })
+                    );
                 }
 
-                let reportsList = [];
-                let responsesList = [];
                 if (isMentor && token) {
-                    try {
-                        const [repRes, compRes] = await Promise.allSettled([
-                            getReports(token),
-                            getComplaintResponses(token),
-                        ]);
-                        if (repRes.status === "fulfilled" && repRes.value?.success)
-                            reportsList = repRes.value.reports;
-                        if (compRes.status === "fulfilled" && compRes.value?.success)
-                            responsesList = compRes.value.responses;
-                    } catch { /* ignore */ }
+                    optionalRequests.push(
+                        getReports(token)
+                            .then((result) => {
+                                if (result?.success) {
+                                    reports = result.reports || [];
+                                }
+                            })
+                            .catch(() => { })
+                    );
+
+                    optionalRequests.push(
+                        getComplaintResponses(token)
+                            .then((result) => {
+                                if (result?.success) {
+                                    responses = result.responses || [];
+                                }
+                            })
+                            .catch(() => { })
+                    );
                 }
 
-                if (reportsList.length > 0) {
-                    const pending = reportsList.filter(
-                        (r) => (r.status || "PENDING").toUpperCase() === "PENDING"
-                    ).length;
-                    setReportStatusData([
-                        { name: "Pending", value: pending, fill: "#f44336" },
-                        { name: "Resolved", value: reportsList.length - pending, fill: "#4caf50" },
-                    ]);
-                }
+                await Promise.all(optionalRequests);
 
-                let userStatsData = stats.userActivity;
-                if (token) {
-                    try {
-                        const userStatsRes = await getUserStats();
-                        if (userStatsRes.success) userStatsData = userStatsRes.stats;
-                    } catch { /* ignore */ }
-                }
+                if (!active) return;
 
-                setStats({
-                    totalPosts: postsList.length,
-                    totalCategories: categoriesSet.size,
-                    totalNotifications: notifsList.length,
-                    unreadNotifications: notifsList.filter((n) => !n.isRead).length,
-                    totalReports: reportsList.length,
-                    pendingReports: reportsList.filter(
-                        (r) => (r.status || "PENDING").toUpperCase() === "PENDING"
-                    ).length,
-                    totalResponses: responsesList.length,
-                    userActivity: userStatsData,
-                });
+                const pendingReports = reports.filter(
+                    (report) =>
+                        (report.status || "PENDING").toUpperCase() === "PENDING"
+                ).length;
+
+                setReportStatusData(
+                    reports.length
+                        ? [
+                            {
+                                name: "Pending",
+                                value: pendingReports,
+                                fill: "#D97706",
+                            },
+                            {
+                                name: "Reviewed / Resolved",
+                                value: reports.length - pendingReports,
+                                fill: "#059669",
+                            },
+                        ]
+                        : []
+                );
+
+                setStats((previous) => ({
+                    ...previous,
+                    totalPosts: posts.length,
+                    totalCategories: categories.size,
+                    totalNotifications: notifications.length,
+                    unreadNotifications: notifications.filter((item) => !item.isRead)
+                        .length,
+                    totalReports: reports.length,
+                    pendingReports,
+                    totalResponses: responses.length,
+                }));
             } catch (err) {
-                setError(getApiErrorMessage(err, "Failed to load dashboard data"));
+                if (active) {
+                    setError(
+                        getApiErrorMessage(err, "Unable to load dashboard information.")
+                    );
+                }
             } finally {
-                setLoading(false);
+                if (active) setLoading(false);
             }
         };
 
         fetchDashboardData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        return () => {
+            active = false;
+        };
     }, [token, isMentor]);
 
-    const radialData = [
-        { name: "Posts", value: stats.userActivity.postsCount, fill: "#1976d2" },
-        { name: "Comments", value: stats.userActivity.commentsCount, fill: "#00bcd4" },
-        { name: "Votes Given", value: stats.userActivity.votesGiven, fill: "#ff9800" },
+    const activityData = [
+        { name: "Posts", value: stats.userActivity.postsCount || 0 },
+        { name: "Comments", value: stats.userActivity.commentsCount || 0 },
+        { name: "Votes", value: stats.userActivity.votesGiven || 0 },
     ];
 
+    const chartTheme = {
+        fontSize: 12,
+        fill: "#64748B",
+    };
+
     return (
-        <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh", pt: 4, pb: 8 }}>
+        <Box
+            sx={{
+                minHeight: "100vh",
+                bgcolor: "#F8FAFC",
+                py: { xs: 3, md: 4 },
+            }}
+        >
             <Container maxWidth="xl">
-                {/* Header Section */}
-                <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                {/* Page header */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: { xs: "flex-start", sm: "center" },
+                        flexDirection: { xs: "column", sm: "row" },
+                        gap: 2,
+                        mb: 3,
+                    }}
+                >
                     <Box>
-                        <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 0.5 }}>
+                        <Typography
+                            sx={{
+                                fontSize: { xs: 25, md: 29 },
+                                fontWeight: 750,
+                                color: "#172033",
+                                letterSpacing: "-0.7px",
+                            }}
+                        >
                             Dashboard
                         </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Here's what's happening on CampusVoice today.
+
+                        <Typography sx={{ fontSize: 14, color: "#64748B", mt: 0.5 }}>
+                            Your CampusVoice activity and community overview.
                         </Typography>
                     </Box>
-                    <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 2 }}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            component={Link}
-                            to="/create-post"
-                            sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600, px: 3 }}
-                        >
-                            + New Post
-                        </Button>
-                    </Box>
+
+                    <Button
+                        component={Link}
+                        to="/create-post"
+                        variant="contained"
+                        disableElevation
+                        sx={{
+                            bgcolor: "#4F46E5",
+                            borderRadius: 1.5,
+                            px: 2.5,
+                            py: 1.1,
+                            textTransform: "none",
+                            fontWeight: 600,
+                            "&:hover": { bgcolor: "#4338CA" },
+                        }}
+                    >
+                        + Create post
+                    </Button>
                 </Box>
 
                 {error && (
-                    <Alert severity="error" sx={{ mb: 4, borderRadius: 2 }}>
+                    <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
                         {error}
                     </Alert>
                 )}
 
-                {/* Profile Banner */}
+                {/* Profile summary */}
                 <Paper
                     elevation={0}
                     sx={{
-                        p: { xs: 3, md: 4 },
+                        p: { xs: 2, md: 2.5 },
                         mb: 4,
-                        borderRadius: 3,
-                        bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 3,
-                        flexWrap: "wrap",
+                        border: "1px solid #E5E7EB",
+                        borderRadius: 2,
+                        bgcolor: "#FFFFFF",
                     }}
                 >
-                    <Avatar
+                    <Box
                         sx={{
-                            width: 80,
-                            height: 80,
-                            bgcolor: theme.palette.primary.light,
-                            color: theme.palette.primary.main,
-                            fontWeight: 700,
-                            fontSize: "2rem",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                            flexWrap: "wrap",
                         }}
                     >
-                        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-                    </Avatar>
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
-                            Welcome back, {user?.name || "User"}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
-                            {user?.email}
-                        </Typography>
-                        <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
-                            <Chip
-                                label={user?.role || "STUDENT"}
-                                color={isMentor ? "secondary" : "primary"}
-                                size="small"
-                                sx={{ fontWeight: 600, borderRadius: 1 }}
-                            />
-                            <Chip
-                                label={`Anonymous ID: ${user?.anonymousHandle || "—"}`}
-                                variant="outlined"
-                                size="small"
-                                sx={{ color: "text.secondary", borderRadius: 1 }}
-                            />
+                        <Avatar
+                            sx={{
+                                width: 54,
+                                height: 54,
+                                bgcolor: "#EEF2FF",
+                                color: "#4338CA",
+                                fontWeight: 700,
+                                fontSize: 21,
+                            }}
+                        >
+                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                        </Avatar>
+
+                        <Box sx={{ flex: 1, minWidth: 180 }}>
+                            <Typography sx={{ fontSize: 17, fontWeight: 700, color: "#172033" }}>
+                                Welcome back, {user?.name || "User"}
+                            </Typography>
+
+                            <Typography sx={{ fontSize: 13, color: "#64748B", mt: 0.3 }}>
+                                {user?.email}
+                            </Typography>
+                        </Box>
+
+                        <Chip
+                            label={user?.role || "STUDENT"}
+                            size="small"
+                            sx={{
+                                bgcolor: isMentor ? "#F3E8FF" : "#EEF2FF",
+                                color: isMentor ? "#7E22CE" : "#4338CA",
+                                fontWeight: 700,
+                                fontSize: 11,
+                                borderRadius: 1,
+                            }}
+                        />
+
+                        <Divider
+                            orientation="vertical"
+                            flexItem
+                            sx={{ display: { xs: "none", md: "block" }, mx: 1 }}
+                        />
+
+                        <Box sx={{ minWidth: 120 }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    color: "#94A3B8",
+                                    letterSpacing: 0.8,
+                                    textTransform: "uppercase",
+                                }}
+                            >
+                                Anonymous handle
+                            </Typography>
+
+                            <Typography
+                                sx={{
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    color: "#334155",
+                                    mt: 0.5,
+                                    overflowWrap: "anywhere",
+                                }}
+                            >
+                                {user?.anonymousHandle || "—"}
+                            </Typography>
                         </Box>
                     </Box>
                 </Paper>
 
                 {loading ? (
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", my: 10 }}>
-                        <CircularProgress />
+                    <Box
+                        sx={{
+                            minHeight: 260,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <CircularProgress size={32} sx={{ color: "#4F46E5" }} />
                     </Box>
                 ) : (
                     <>
-                        {/* Global Statistics */}
-                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
-                            Platform Overview
-                        </Typography>
-                        <Grid container spacing={3} sx={{ mb: 4 }}>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <StatCard label="Total Posts" value={stats.totalPosts} color="#1976d2" />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <StatCard label="Categories" value={stats.totalCategories} color="#00bcd4" />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <StatCard
-                                    label="Notifications"
-                                    value={stats.totalNotifications}
-                                    color="#ff9800"
-                                    sub={stats.unreadNotifications > 0 ? `${stats.unreadNotifications} unread` : null}
-                                />
-                            </Grid>
-                            {isMentor ? (
-                                <Grid item xs={12} sm={6} md={3}>
+                        {/* Platform overview */}
+                        <Box sx={{ mb: 4 }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 16,
+                                    fontWeight: 700,
+                                    color: "#172033",
+                                    mb: 2,
+                                }}
+                            >
+                                Platform overview
+                            </Typography>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6} lg={3}>
                                     <StatCard
-                                        label="Reports"
-                                        value={stats.totalReports}
-                                        color="#f44336"
-                                        sub={stats.pendingReports > 0 ? `${stats.pendingReports} pending action` : null}
+                                        label="Total posts"
+                                        value={stats.totalPosts}
+                                        accent="#4F46E5"
+                                        caption="Across the community"
                                     />
                                 </Grid>
-                            ) : (
-                                <Grid item xs={12} sm={6} md={3}>
-                                    <StatCard label="Reputation Score" value={stats.userActivity.reputation} color="#4caf50" />
-                                </Grid>
-                            )}
-                        </Grid>
 
-                        {/* Charts Section */}
-                        <Grid container spacing={3} sx={{ mb: 4 }}>
-                            <Grid item xs={12} md={8}>
-                                <ChartCard title="Post Activity (Last 7 Days)">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={postsPerDay} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                            <defs>
-                                                <linearGradient id="colorPosts" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor={theme.palette.primary.main} stopOpacity={0.2} />
-                                                    <stop offset="95%" stopColor={theme.palette.primary.main} stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                            <XAxis dataKey="date" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
-                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
-                                            <Tooltip content={<TooltipBox />} />
-                                            <Area
-                                                type="monotone"
-                                                dataKey="posts"
-                                                name="Posts"
-                                                stroke={theme.palette.primary.main}
-                                                strokeWidth={3}
-                                                fillOpacity={1}
-                                                fill="url(#colorPosts)"
-                                                activeDot={{ r: 6, strokeWidth: 0, fill: theme.palette.primary.main }}
-                                            />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                </ChartCard>
-                            </Grid>
-                            <Grid item xs={12} md={4}>
-                                <ChartCard title="Posts by Category">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={categoryDistribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                            <XAxis dataKey="category" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
-                                            <YAxis allowDecimals={false} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
-                                            <Tooltip content={<TooltipBox />} cursor={{ fill: "#f1f5f9" }} />
-                                            <Bar dataKey="count" name="Posts" radius={[4, 4, 0, 0]} barSize={32}>
-                                                {categoryDistribution.map((_, i) => (
-                                                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                                                ))}
-                                            </Bar>
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </ChartCard>
-                            </Grid>
-                        </Grid>
-
-                        {/* Bottom Row */}
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={isMentor ? 8 : 12}>
-                                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
-                                    My Activity Summary
-                                </Typography>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard label="My Posts" value={stats.userActivity.postsCount} color="#1976d2" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard label="My Comments" value={stats.userActivity.commentsCount} color="#00bcd4" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard label="Votes Given" value={stats.userActivity.votesGiven} color="#9c27b0" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={3}>
-                                        <StatCard
-                                            label="Upvotes Received"
-                                            value={stats.userActivity.upvotesReceived ?? 0}
-                                            color="#4caf50"
-                                            sub={stats.userActivity.downvotesReceived > 0 ? `${stats.userActivity.downvotesReceived} downvotes` : null}
-                                        />
-                                    </Grid>
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="Categories"
+                                        value={stats.totalCategories}
+                                        accent="#0891B2"
+                                        caption="Categories in use"
+                                    />
                                 </Grid>
+
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="Notifications"
+                                        value={stats.totalNotifications}
+                                        accent="#D97706"
+                                        caption={`${stats.unreadNotifications} unread`}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label={isMentor ? "Pending reports" : "Reputation score"}
+                                        value={
+                                            isMentor
+                                                ? stats.pendingReports
+                                                : stats.userActivity.reputation
+                                        }
+                                        accent={isMentor ? "#DC2626" : "#059669"}
+                                        caption={
+                                            isMentor ? "Awaiting review" : "Your community score"
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        {/* Analytics */}
+                        <Box sx={{ mb: 4 }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 16,
+                                    fontWeight: 700,
+                                    color: "#172033",
+                                    mb: 2,
+                                }}
+                            >
+                                Community analytics
+                            </Typography>
+
+                            <Grid container spacing={2.5}>
+                                <Grid item xs={12} lg={8}>
+                                    <ChartPanel
+                                        title="Post activity"
+                                        subtitle="Posts created over the last seven days"
+                                        height={280}
+                                    >
+                                        {postsPerDay.length ? (
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <AreaChart
+                                                    data={postsPerDay}
+                                                    margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+                                                >
+                                                    <defs>
+                                                        <linearGradient
+                                                            id="dashboardPostGradient"
+                                                            x1="0"
+                                                            y1="0"
+                                                            x2="0"
+                                                            y2="1"
+                                                        >
+                                                            <stop
+                                                                offset="0%"
+                                                                stopColor="#4F46E5"
+                                                                stopOpacity={0.18}
+                                                            />
+                                                            <stop
+                                                                offset="100%"
+                                                                stopColor="#4F46E5"
+                                                                stopOpacity={0}
+                                                            />
+                                                        </linearGradient>
+                                                    </defs>
+
+                                                    <CartesianGrid
+                                                        stroke="#E2E8F0"
+                                                        strokeDasharray="3 3"
+                                                        vertical={false}
+                                                    />
+
+                                                    <XAxis
+                                                        dataKey="date"
+                                                        tick={chartTheme}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                        tickMargin={10}
+                                                    />
+
+                                                    <YAxis
+                                                        allowDecimals={false}
+                                                        tick={chartTheme}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                    />
+
+                                                    <Tooltip
+                                                        contentStyle={{
+                                                            border: "1px solid #E5E7EB",
+                                                            borderRadius: 8,
+                                                            fontSize: 12,
+                                                            boxShadow: "0 4px 16px rgba(15,23,42,0.06)",
+                                                        }}
+                                                    />
+
+                                                    <Area
+                                                        type="monotone"
+                                                        dataKey="posts"
+                                                        name="Posts"
+                                                        stroke="#4F46E5"
+                                                        strokeWidth={2.5}
+                                                        fill="url(#dashboardPostGradient)"
+                                                        activeDot={{ r: 4 }}
+                                                    />
+                                                </AreaChart>
+                                            </ResponsiveContainer>
+                                        ) : (
+                                            <EmptyChart message="Activity will appear when post statistics are available." />
+                                        )}
+                                    </ChartPanel>
+                                </Grid>
+
+                                <Grid item xs={12} lg={4}>
+                                    <ChartPanel
+                                        title="Posts by category"
+                                        subtitle="Distribution across categories"
+                                        height={280}
+                                    >
+                                        {categoryDistribution.length ? (
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    data={categoryDistribution}
+                                                    margin={{ top: 8, right: 4, left: -24, bottom: 0 }}
+                                                >
+                                                    <CartesianGrid
+                                                        stroke="#E2E8F0"
+                                                        strokeDasharray="3 3"
+                                                        vertical={false}
+                                                    />
+
+                                                    <XAxis
+                                                        dataKey="category"
+                                                        tick={{ ...chartTheme, fontSize: 10 }}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                        tickMargin={8}
+                                                    />
+
+                                                    <YAxis
+                                                        allowDecimals={false}
+                                                        tick={chartTheme}
+                                                        axisLine={false}
+                                                        tickLine={false}
+                                                    />
+
+                                                    <Tooltip
+                                                        contentStyle={{
+                                                            border: "1px solid #E5E7EB",
+                                                            borderRadius: 8,
+                                                            fontSize: 12,
+                                                        }}
+                                                    />
+
+                                                    <Bar
+                                                        dataKey="count"
+                                                        name="Posts"
+                                                        fill="#4F46E5"
+                                                        radius={[4, 4, 0, 0]}
+                                                        maxBarSize={38}
+                                                    >
+                                                        {categoryDistribution.map((item, index) => (
+                                                            <Cell
+                                                                key={item.category || index}
+                                                                fill={COLORS[index % COLORS.length]}
+                                                            />
+                                                        ))}
+                                                    </Bar>
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        ) : (
+                                            <EmptyChart message="Category statistics are not available yet." />
+                                        )}
+                                    </ChartPanel>
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        {/* Personal activity */}
+                        <Box sx={{ mb: 4 }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 16,
+                                    fontWeight: 700,
+                                    color: "#172033",
+                                    mb: 2,
+                                }}
+                            >
+                                My activity
+                            </Typography>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="My posts"
+                                        value={stats.userActivity.postsCount}
+                                        accent="#4F46E5"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="My comments"
+                                        value={stats.userActivity.commentsCount}
+                                        accent="#0891B2"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="Votes given"
+                                        value={stats.userActivity.votesGiven}
+                                        accent="#D97706"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6} lg={3}>
+                                    <StatCard
+                                        label="Upvotes received"
+                                        value={stats.userActivity.upvotesReceived}
+                                        accent="#059669"
+                                        caption={`${formatNumber(
+                                            stats.userActivity.downvotesReceived
+                                        )} downvotes received`}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        {/* Activity breakdown */}
+                        <Grid container spacing={2.5}>
+                            <Grid item xs={12} md={isMentor ? 6 : 12}>
+                                <ChartPanel
+                                    title="My activity breakdown"
+                                    subtitle="Your contributions on CampusVoice"
+                                    height={250}
+                                >
+                                    {activityData.some((item) => item.value > 0) ? (
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <BarChart
+                                                data={activityData}
+                                                margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+                                            >
+                                                <CartesianGrid
+                                                    stroke="#E2E8F0"
+                                                    strokeDasharray="3 3"
+                                                    vertical={false}
+                                                />
+
+                                                <XAxis
+                                                    dataKey="name"
+                                                    tick={chartTheme}
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                />
+
+                                                <YAxis
+                                                    allowDecimals={false}
+                                                    tick={chartTheme}
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                />
+
+                                                <Tooltip
+                                                    contentStyle={{
+                                                        border: "1px solid #E5E7EB",
+                                                        borderRadius: 8,
+                                                        fontSize: 12,
+                                                    }}
+                                                />
+
+                                                <Bar
+                                                    dataKey="value"
+                                                    name="Total"
+                                                    fill="#4F46E5"
+                                                    radius={[4, 4, 0, 0]}
+                                                    maxBarSize={52}
+                                                >
+                                                    {activityData.map((item, index) => (
+                                                        <Cell
+                                                            key={item.name}
+                                                            fill={COLORS[index]}
+                                                        />
+                                                    ))}
+                                                </Bar>
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    ) : (
+                                        <EmptyChart message="Your activity summary will appear here as you participate." />
+                                    )}
+                                </ChartPanel>
                             </Grid>
 
                             {isMentor && (
-                                <Grid item xs={12} md={4}>
-                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}>
-                                        Report Resolution
-                                    </Typography>
-                                    <Paper
-                                        elevation={0}
-                                        sx={{
-                                            p: 3,
-                                            borderRadius: 3,
-                                            bgcolor: "background.paper",
-                                            border: "1px solid",
-                                            borderColor: "divider",
-                                            height: 200,
-                                        }}
+                                <Grid item xs={12} md={6}>
+                                    <ChartPanel
+                                        title="Report resolution"
+                                        subtitle={`${stats.totalReports} total reports`}
+                                        height={250}
                                     >
-                                        {reportStatusData.length > 0 ? (
+                                        {reportStatusData.some((item) => item.value > 0) ? (
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <PieChart>
                                                     <Pie
                                                         data={reportStatusData}
-                                                        cx="50%"
-                                                        cy="50%"
-                                                        innerRadius="50%"
-                                                        outerRadius="80%"
-                                                        paddingAngle={2}
                                                         dataKey="value"
+                                                        nameKey="name"
+                                                        cx="50%"
+                                                        cy="45%"
+                                                        innerRadius={55}
+                                                        outerRadius={85}
+                                                        paddingAngle={3}
                                                         stroke="none"
                                                     >
-                                                        {reportStatusData.map((entry, i) => (
-                                                            <Cell key={i} fill={entry.fill} />
+                                                        {reportStatusData.map((item) => (
+                                                            <Cell key={item.name} fill={item.fill} />
                                                         ))}
                                                     </Pie>
-                                                    <Tooltip content={<TooltipBox />} />
-                                                    <Legend wrapperStyle={{ fontSize: "12px", color: "#64748b" }} />
+
+                                                    <Tooltip
+                                                        contentStyle={{
+                                                            border: "1px solid #E5E7EB",
+                                                            borderRadius: 8,
+                                                            fontSize: 12,
+                                                        }}
+                                                    />
+
+                                                    <Legend
+                                                        verticalAlign="bottom"
+                                                        iconType="circle"
+                                                        wrapperStyle={{ fontSize: 11 }}
+                                                    />
                                                 </PieChart>
                                             </ResponsiveContainer>
                                         ) : (
-                                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    No reports available.
-                                                </Typography>
-                                            </Box>
+                                            <EmptyChart message="No reports available yet." />
                                         )}
-                                    </Paper>
+                                    </ChartPanel>
                                 </Grid>
                             )}
                         </Grid>
