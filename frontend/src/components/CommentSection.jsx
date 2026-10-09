@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     Alert,
+    Avatar,
     Box,
     Button,
     CircularProgress,
@@ -9,6 +10,9 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import SendIcon from "@mui/icons-material/Send";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 
 import {
     getCommentsByPost,
@@ -105,60 +109,86 @@ const CommentSection = ({ postId }) => {
     };
 
     return (
-        <Box>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Comments ({comments.length})
-            </Typography>
+        <Box sx={{ mt: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+                <ChatBubbleOutlineIcon sx={{ color: "#4F46E5", fontSize: 22 }} />
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "#0F172A" }}>
+                    Discussion ({comments.length})
+                </Typography>
+            </Box>
 
             {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
+                <Alert severity="error" sx={{ mb: 2, borderRadius: "10px" }}>
                     {error}
                 </Alert>
             )}
 
             {loading ? (
                 <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                    <CircularProgress size={32} />
+                    <CircularProgress size={30} sx={{ color: "#4F46E5" }} />
                 </Box>
             ) : comments.length === 0 ? (
                 <Paper
-                    variant="outlined"
-                    sx={{ p: 3, textAlign: "center", backgroundColor: "action.hover" }}
+                    elevation={0}
+                    sx={{
+                        p: 4,
+                        textAlign: "center",
+                        bgcolor: "#F8FAFC",
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "12px",
+                    }}
                 >
-                    <Typography color="text.secondary">
-                        No comments yet. Be the first to share your thoughts!
+                    <Typography variant="body2" color="text.secondary">
+                        No comments yet. Be the first to join the conversation!
                     </Typography>
                 </Paper>
             ) : (
                 comments.map((comment) => (
                     <Paper
                         key={comment.id}
-                        sx={{ p: 2, mb: 2 }}
-                        elevation={1}
+                        elevation={0}
+                        sx={{
+                            p: 2.5,
+                            mb: 2,
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "12px",
+                            bgcolor: "#FFFFFF",
+                        }}
                     >
                         <Box
                             sx={{
                                 display: "flex",
                                 justifyContent: "space-between",
+                                alignItems: "center",
                                 mb: 1,
                             }}
                         >
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
-                                sx={{ fontWeight: 600 }}
-                            >
-                                {comment.anonymousId || "Anonymous"}
-                            </Typography>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                <Avatar
+                                    sx={{
+                                        width: 26,
+                                        height: 26,
+                                        fontSize: "0.75rem",
+                                        fontWeight: 700,
+                                        bgcolor: "rgba(79, 70, 229, 0.1)",
+                                        color: "#4F46E5",
+                                    }}
+                                >
+                                    A
+                                </Avatar>
+                                <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155" }}>
+                                    {comment.anonymousId || "Anonymous"}
+                                </Typography>
+                            </Box>
 
                             {comment.createdAt && (
-                                <Typography variant="caption" color="text.secondary">
+                                <Typography variant="caption" sx={{ color: "#94A3B8" }}>
                                     {formatDate(comment.createdAt)}
                                 </Typography>
                             )}
                         </Box>
 
-                        <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                        <Typography variant="body2" sx={{ whiteSpace: "pre-line", color: "#334155", pl: 4.25 }}>
                             {comment.content}
                         </Typography>
                     </Paper>
@@ -180,7 +210,7 @@ const CommentSection = ({ postId }) => {
                         }}
                     >
                         <TextField
-                            label="Write a comment..."
+                            label="Add to discussion..."
                             value={content}
                             onChange={handleChange}
                             error={Boolean(inputError)}
@@ -196,8 +226,9 @@ const CommentSection = ({ postId }) => {
                                 type="submit"
                                 variant="contained"
                                 disabled={submitting}
+                                endIcon={submitting ? null : <SendIcon fontSize="small" />}
                             >
-                                {submitting ? "Posting..." : "Add Comment"}
+                                {submitting ? "Posting..." : "Post Comment"}
                             </Button>
                         </Box>
                     </Box>

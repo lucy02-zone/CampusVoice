@@ -14,6 +14,9 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
+import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import { getReports } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
@@ -49,17 +52,17 @@ const AdminReports = () => {
         }
     }, [token]);
 
-    const getStatusChipColor = (status) => {
+    const getStatusChipProps = (status) => {
         switch (status?.toUpperCase()) {
             case "PENDING":
-                return "warning";
+                return { bgcolor: "rgba(245, 158, 11, 0.12)", color: "#D97706", label: "PENDING REVIEW" };
             case "RESOLVED":
-                return "success";
+                return { bgcolor: "rgba(16, 185, 129, 0.12)", color: "#059669", label: "RESOLVED" };
             case "REJECTED":
             case "DISMISSED":
-                return "error";
+                return { bgcolor: "rgba(239, 68, 68, 0.12)", color: "#DC2626", label: "DISMISSED" };
             default:
-                return "default";
+                return { bgcolor: "#F1F5F9", color: "#64748B", label: status || "UNKNOWN" };
         }
     };
 
@@ -79,11 +82,16 @@ const AdminReports = () => {
     };
 
     return (
-        <Container maxWidth="md">
-            <Box sx={{ mt: 5, mb: 4 }}>
-                <Typography variant="h4" gutterBottom>
-                    Reported Posts Admin
-                </Typography>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="md">
+                <Box sx={{ mb: 4 }}>
+                    <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2.25rem" }, fontWeight: 800 }}>
+                        Content Reports Management
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: "#64748B", mt: 0.5 }}>
+                        Review flagged posts reported by community members.
+                    </Typography>
+                </Box>
 
                 {loading && (
                     <Box
@@ -91,105 +99,137 @@ const AdminReports = () => {
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            my: 5,
+                            py: 8,
                         }}
                     >
-                        <CircularProgress />
+                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
                     </Box>
                 )}
 
                 {!loading && error && (
-                    <Alert severity="error" sx={{ mb: 3 }}>
+                    <Alert severity="error" sx={{ mb: 4, borderRadius: "12px" }}>
                         {error}
                     </Alert>
                 )}
 
                 {!loading && !error && reports.length === 0 && (
                     <Paper
+                        elevation={0}
                         sx={{
-                            p: 5,
+                            p: 6,
                             textAlign: "center",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 2,
-                            mt: 2,
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "16px",
+                            bgcolor: "#FFFFFF",
                         }}
                     >
-                        <Typography variant="h6" color="text.secondary">
-                            No reports available.
+                        <FlagOutlinedIcon sx={{ fontSize: 48, color: "#94A3B8", mb: 2 }} />
+                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                            No reports flagged
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            There are currently no reported posts to review.
+                        <Typography variant="body2" sx={{ color: "#64748B" }}>
+                            There are currently no active content reports requiring mentor action.
                         </Typography>
                     </Paper>
                 )}
 
                 {!loading &&
                     !error &&
-                    reports.map((report) => (
-                        <Card key={report.id} sx={{ mb: 3, boxShadow: 2, borderRadius: 2 }}>
-                            <CardContent>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        mb: 2,
-                                    }}
-                                >
-                                    <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
-                                        Report #{report.id}
-                                    </Typography>
+                    reports.map((report) => {
+                        const statusProps = getStatusChipProps(report.status);
+                        return (
+                            <Card
+                                key={report.id}
+                                elevation={0}
+                                sx={{
+                                    mb: 3,
+                                    border: "1px solid #E2E8F0",
+                                    borderRadius: "16px",
+                                    bgcolor: "#FFFFFF",
+                                    transition: "all 180ms ease-in-out",
+                                    "&:hover": {
+                                        boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.05)",
+                                    },
+                                }}
+                            >
+                                <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            mb: 2,
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                            <Chip
+                                                label={`Reason: ${report.reason}`}
+                                                size="small"
+                                                sx={{
+                                                    bgcolor: "rgba(239, 68, 68, 0.08)",
+                                                    color: "#EF4444",
+                                                    fontWeight: 700,
+                                                    borderRadius: "6px",
+                                                }}
+                                            />
+                                            {report.postId && (
+                                                <Typography variant="caption" sx={{ color: "#64748B", fontWeight: 600 }}>
+                                                    Target Post #{report.postId}
+                                                </Typography>
+                                            )}
+                                        </Box>
 
-                                    <Box sx={{ display: "flex", gap: 1 }}>
                                         <Chip
-                                            label={report.reason}
-                                            variant="outlined"
+                                            label={statusProps.label}
                                             size="small"
-                                        />
-                                        <Chip
-                                            label={report.status || "PENDING"}
-                                            color={getStatusChipColor(report.status || "PENDING")}
-                                            size="small"
+                                            sx={{
+                                                bgcolor: statusProps.bgcolor,
+                                                color: statusProps.color,
+                                                fontWeight: 700,
+                                                borderRadius: "6px",
+                                            }}
                                         />
                                     </Box>
-                                </Box>
 
-                                <Box sx={{ mb: 2, color: "text.secondary" }}>
-                                    <Typography variant="body2" gutterBottom>
-                                        Target Post ID: <strong>{report.postId}</strong>
+                                    <Typography variant="body1" sx={{ color: "#334155", mb: 2, fontWeight: 500 }}>
+                                        {report.description}
                                     </Typography>
 
-                                    {report.createdAt && (
-                                        <Typography variant="caption" color="text.secondary">
-                                            Reported on: {formatDate(report.createdAt)}
-                                        </Typography>
-                                    )}
-                                </Box>
+                                    <Divider sx={{ my: 2 }} />
 
-                                <Divider sx={{ my: 1.5 }} />
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "#94A3B8" }}>
+                                            <AccessTimeOutlinedIcon sx={{ fontSize: 16 }} />
+                                            <Typography variant="caption">
+                                                Reported on {formatDate(report.createdAt)}
+                                            </Typography>
+                                        </Box>
 
-                                <Typography variant="body2" sx={{ mt: 1.5, color: "text.primary" }}>
-                                    <strong>Description:</strong>{" "}
-                                    {report.description || "No detailed description provided."}
-                                </Typography>
-                            </CardContent>
-
-                            <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
-                                <Button
-                                    size="small"
-                                    variant="outlined"
-                                    component={Link}
-                                    to={`/posts/${report.postId}`}
-                                >
-                                    View Post #{report.postId}
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    ))}
-            </Box>
-        </Container>
+                                        {report.postId && (
+                                            <Button
+                                                component={Link}
+                                                to={`/posts/${report.postId}`}
+                                                variant="outlined"
+                                                size="small"
+                                                endIcon={<ArrowForwardOutlinedIcon fontSize="small" />}
+                                            >
+                                                Inspect Post
+                                            </Button>
+                                        )}
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+            </Container>
+        </Box>
     );
 };
 

@@ -11,6 +11,7 @@ import {
     CircularProgress,
     Container,
     FormControl,
+    InputAdornment,
     InputLabel,
     MenuItem,
     Paper,
@@ -18,6 +19,13 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 import { getPosts } from "../api/postApi";
 import { getApiErrorMessage } from "../api/apiError";
@@ -85,24 +93,34 @@ const Posts = () => {
     });
 
     return (
-        <Container maxWidth="md">
-            <Box sx={{ mt: 5, mb: 4 }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="md">
+                {/* Page Header */}
                 <Box
                     sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 3,
+                        alignItems: { xs: "flex-start", sm: "center" },
+                        flexDirection: { xs: "column", sm: "row" },
+                        gap: 2,
+                        mb: 4,
                     }}
                 >
-                    <Typography variant="h4">
-                        CampusVoice Posts
-                    </Typography>
+                    <Box>
+                        <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2.25rem" }, fontWeight: 800 }}>
+                            Campus Feed
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: "#64748B", mt: 0.5 }}>
+                            Browse and discover anonymous posts submitted by students.
+                        </Typography>
+                    </Box>
 
                     <Button
-                        variant="contained"
                         component={Link}
                         to="/create-post"
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        sx={{ px: 2.5, py: 1.25, borderRadius: "10px" }}
                     >
                         Create Post
                     </Button>
@@ -114,109 +132,132 @@ const Posts = () => {
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            my: 5,
+                            py: 8,
                         }}
                     >
-                        <CircularProgress />
+                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
                     </Box>
                 )}
 
                 {!loading && error && (
-                    <Alert severity="error" sx={{ mb: 3 }}>
+                    <Alert severity="error" sx={{ mb: 4, borderRadius: "12px" }}>
                         {error}
                     </Alert>
                 )}
 
                 {!loading && !error && (
-                    <Box
+                    <Paper
+                        elevation={0}
                         sx={{
-                            display: "flex",
-                            gap: 2,
-                            mb: 3,
-                            flexDirection: { xs: "column", sm: "row" },
+                            p: 2,
+                            mb: 4,
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "14px",
+                            bgcolor: "#FFFFFF",
                         }}
                     >
-                        <TextField
-                            fullWidth
-                            label="Search Posts"
-                            placeholder="Search by title or content..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                flexDirection: { xs: "column", sm: "row" },
+                            }}
+                        >
+                            <TextField
+                                fullWidth
+                                placeholder="Search by title or keyword..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon sx={{ color: "#94A3B8" }} />
+                                            </InputAdornment>
+                                        ),
+                                    },
+                                }}
+                            />
 
-                        <FormControl sx={{ minWidth: { xs: "100%", sm: 200 } }}>
-                            <InputLabel id="category-filter-label">Category</InputLabel>
-                            <Select
-                                labelId="category-filter-label"
-                                value={selectedCategory}
-                                label="Category"
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                            >
-                                <MenuItem value="ALL">All Categories</MenuItem>
-                                {categories
-                                    .filter((cat) => cat !== "ALL")
-                                    .map((category) => (
-                                        <MenuItem key={category} value={category}>
-                                            {category}
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
+                            <FormControl sx={{ minWidth: { xs: "100%", sm: 220 } }}>
+                                <InputLabel id="category-filter-label">Category</InputLabel>
+                                <Select
+                                    labelId="category-filter-label"
+                                    value={selectedCategory}
+                                    label="Category"
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <FilterListIcon sx={{ color: "#94A3B8", fontSize: 20 }} />
+                                        </InputAdornment>
+                                    }
+                                >
+                                    <MenuItem value="ALL">All Categories</MenuItem>
+                                    {categories
+                                        .filter((cat) => cat !== "ALL")
+                                        .map((category) => (
+                                            <MenuItem key={category} value={category}>
+                                                {category}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Paper>
                 )}
 
                 {!loading && !error && posts.length === 0 && (
                     <Paper
+                        elevation={0}
                         sx={{
-                            p: 5,
+                            p: 6,
                             textAlign: "center",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 2,
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "16px",
+                            bgcolor: "#FFFFFF",
                         }}
                     >
-                        <Typography variant="h6" color="text.secondary">
-                            No posts available.
+                        <ArticleOutlinedIcon sx={{ fontSize: 48, color: "#94A3B8", mb: 2 }} />
+                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+                            No posts available yet
                         </Typography>
-
-                        <Typography variant="body2" color="text.secondary">
-                            Be the first to share your campus experience!
+                        <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+                            Be the first to share your campus experience or concern anonymously.
                         </Typography>
-
                         <Button
                             variant="contained"
                             component={Link}
                             to="/create-post"
-                            sx={{ mt: 1 }}
+                            startIcon={<AddIcon />}
                         >
-                            Create Post
+                            Create First Post
                         </Button>
                     </Paper>
                 )}
 
                 {!loading && !error && posts.length > 0 && filteredPosts.length === 0 && (
                     <Paper
+                        elevation={0}
                         sx={{
-                            p: 4,
+                            p: 5,
                             textAlign: "center",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 2,
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "16px",
+                            bgcolor: "#FFFFFF",
                         }}
                     >
-                        <Typography variant="h6" color="text.secondary">
-                            No posts found.
+                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                            No matching posts found
                         </Typography>
-
+                        <Typography variant="body2" sx={{ color: "#64748B", mb: 2 }}>
+                            Try searching for another keyword or clearing your category filters.
+                        </Typography>
                         <Button
                             variant="outlined"
                             onClick={() => {
                                 setSearchQuery("");
                                 setSelectedCategory("ALL");
                             }}
-                            sx={{ mt: 1 }}
                         >
                             Clear Filters
                         </Button>
@@ -226,27 +267,57 @@ const Posts = () => {
                 {!loading &&
                     !error &&
                     filteredPosts.map((post) => (
-                        <Card key={post.id} sx={{ mb: 3, boxShadow: 2, borderRadius: 2 }}>
-                            <CardContent>
+                        <Card
+                            key={post.id}
+                            elevation={0}
+                            sx={{
+                                mb: 3,
+                                border: "1px solid #E2E8F0",
+                                borderRadius: "16px",
+                                bgcolor: "#FFFFFF",
+                                transition: "all 180ms ease-in-out",
+                                "&:hover": {
+                                    transform: "translateY(-2px)",
+                                    boxShadow: "0 12px 24px -6px rgba(15, 23, 42, 0.06)",
+                                    borderColor: "#CBD5E1",
+                                },
+                            }}
+                        >
+                            <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
                                 <Box
                                     sx={{
                                         display: "flex",
                                         justifyContent: "space-between",
                                         alignItems: "flex-start",
                                         mb: 1.5,
-                                        gap: 1,
+                                        gap: 2,
                                     }}
                                 >
-                                    <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+                                    <Typography
+                                        variant="h5"
+                                        component={Link}
+                                        to={`/posts/${post.id}`}
+                                        sx={{
+                                            fontWeight: 700,
+                                            fontSize: "1.25rem",
+                                            color: "#0F172A",
+                                            textDecoration: "none",
+                                            "&:hover": { color: "#4F46E5" },
+                                        }}
+                                    >
                                         {post.title}
                                     </Typography>
 
                                     {post.category && (
                                         <Chip
                                             label={post.category}
-                                            color="primary"
                                             size="small"
-                                            variant="outlined"
+                                            sx={{
+                                                bgcolor: "rgba(79, 70, 229, 0.08)",
+                                                color: "#4F46E5",
+                                                fontWeight: 700,
+                                                borderRadius: "6px",
+                                            }}
                                         />
                                     )}
                                 </Box>
@@ -254,27 +325,32 @@ const Posts = () => {
                                 <Box
                                     sx={{
                                         display: "flex",
+                                        alignItems: "center",
                                         gap: 2,
                                         mb: 2,
-                                        color: "text.secondary",
+                                        color: "#64748B",
+                                        fontSize: "0.8125rem",
                                     }}
                                 >
-                                    <Typography variant="caption" color="text.secondary">
-                                        Author: <strong>{post.anonymousId || "Anonymous"}</strong>
-                                    </Typography>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                                        <SecurityOutlinedIcon sx={{ fontSize: 16, color: "#4F46E5" }} />
+                                        <span>Author: <strong>{post.anonymousId || "Anonymous"}</strong></span>
+                                    </Box>
 
                                     {post.createdAt && (
-                                        <Typography variant="caption" color="text.secondary">
-                                            {formatDate(post.createdAt)}
-                                        </Typography>
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                                            <AccessTimeOutlinedIcon sx={{ fontSize: 16, color: "#94A3B8" }} />
+                                            <span>{formatDate(post.createdAt)}</span>
+                                        </Box>
                                     )}
                                 </Box>
 
                                 <Typography
                                     variant="body1"
-                                    color="text.primary"
                                     sx={{
-                                        mb: 1,
+                                        color: "#334155",
+                                        mb: 2,
+                                        lineHeight: 1.6,
                                         display: "-webkit-box",
                                         WebkitLineClamp: 3,
                                         WebkitBoxOrient: "vertical",
@@ -284,22 +360,23 @@ const Posts = () => {
                                 >
                                     {post.content}
                                 </Typography>
-                            </CardContent>
 
-                            <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
-                                <Button
-                                    variant="contained"
-                                    component={Link}
-                                    to={`/posts/${post.id}`}
-                                    size="small"
-                                >
-                                    View Post
-                                </Button>
-                            </CardActions>
+                                <Box sx={{ display: "flex", justifyContent: "flex-end", pt: 1 }}>
+                                    <Button
+                                        component={Link}
+                                        to={`/posts/${post.id}`}
+                                        variant="outlined"
+                                        size="small"
+                                        endIcon={<ArrowForwardOutlinedIcon fontSize="small" />}
+                                    >
+                                        Read & Discuss
+                                    </Button>
+                                </Box>
+                            </CardContent>
                         </Card>
                     ))}
-            </Box>
-        </Container>
+            </Container>
+        </Box>
     );
 };
 

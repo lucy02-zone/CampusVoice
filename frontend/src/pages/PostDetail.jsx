@@ -12,6 +12,11 @@ import {
     Divider,
     Typography,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import { getPosts } from "../api/postApi";
 import CommentSection from "../components/CommentSection";
@@ -107,55 +112,57 @@ const PostDetail = () => {
 
     if (loading) {
         return (
-            <Container maxWidth="md">
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minHeight: "50vh",
-                    }}
-                >
-                    <CircularProgress />
-                </Box>
-            </Container>
+            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: 8 }}>
+                <Container maxWidth="md">
+                    <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
+                    </Box>
+                </Container>
+            </Box>
         );
     }
 
     if (error || !post) {
         return (
-            <Container maxWidth="md">
-                <Box sx={{ mt: 5 }}>
+            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: 6 }}>
+                <Container maxWidth="md">
                     <Button
                         component={Link}
                         to="/posts"
-                        variant="outlined"
+                        startIcon={<ArrowBackIcon />}
                         sx={{ mb: 3 }}
                     >
-                        ← Back to Posts
+                        Back to Posts
                     </Button>
-                    <Alert severity="error">
+                    <Alert severity="error" sx={{ borderRadius: "12px" }}>
                         {error || "Post not found"}
                     </Alert>
-                </Box>
-            </Container>
+                </Container>
+            </Box>
         );
     }
 
     return (
-        <Container maxWidth="md">
-            <Box sx={{ mt: 4, mb: 5 }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="md">
                 <Button
                     component={Link}
                     to="/posts"
-                    variant="outlined"
-                    sx={{ mb: 3 }}
+                    startIcon={<ArrowBackIcon />}
+                    sx={{ mb: 3, color: "#64748B" }}
                 >
-                    ← Back to Posts
+                    Back to Posts
                 </Button>
 
-                <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-                    <CardContent sx={{ p: 4 }}>
+                <Card
+                    elevation={0}
+                    sx={{
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "16px",
+                        bgcolor: "#FFFFFF",
+                    }}
+                >
+                    <CardContent sx={{ p: { xs: 3, md: 4 } }}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -165,15 +172,19 @@ const PostDetail = () => {
                                 gap: 2,
                             }}
                         >
-                            <Typography variant="h4" component="h1" sx={{ fontWeight: 600 }}>
+                            <Typography variant="h3" component="h1" sx={{ fontSize: { xs: "1.5rem", md: "1.875rem" }, fontWeight: 800, color: "#0F172A" }}>
                                 {post.title}
                             </Typography>
 
                             {post.category && (
                                 <Chip
                                     label={post.category}
-                                    color="primary"
-                                    variant="outlined"
+                                    sx={{
+                                        bgcolor: "rgba(79, 70, 229, 0.08)",
+                                        color: "#4F46E5",
+                                        fontWeight: 700,
+                                        borderRadius: "6px",
+                                    }}
                                 />
                             )}
                         </Box>
@@ -181,29 +192,35 @@ const PostDetail = () => {
                         <Box
                             sx={{
                                 display: "flex",
-                                gap: 2,
+                                alignItems: "center",
+                                gap: 2.5,
                                 mb: 3,
-                                color: "text.secondary",
+                                color: "#64748B",
+                                fontSize: "0.875rem",
                             }}
                         >
-                            <Typography variant="body2" color="text.secondary">
-                                Author: <strong>{post.anonymousId || "Anonymous"}</strong>
-                            </Typography>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                                <SecurityOutlinedIcon sx={{ fontSize: 18, color: "#4F46E5" }} />
+                                <span>Author: <strong>{post.anonymousId || "Anonymous"}</strong></span>
+                            </Box>
 
                             {post.createdAt && (
-                                <Typography variant="body2" color="text.secondary">
-                                    Posted on: {formatDate(post.createdAt)}
-                                </Typography>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                                    <AccessTimeOutlinedIcon sx={{ fontSize: 18, color: "#94A3B8" }} />
+                                    <span>Posted on {formatDate(post.createdAt)}</span>
+                                </Box>
                             )}
                         </Box>
 
-                        <Divider sx={{ mb: 3 }} />
+                        <Divider sx={{ mb: 3.5 }} />
 
                         <Typography
                             variant="body1"
                             sx={{
                                 mb: 4,
                                 lineHeight: 1.7,
+                                color: "#334155",
+                                fontSize: "1rem",
                                 whiteSpace: "pre-line",
                             }}
                         >
@@ -211,19 +228,19 @@ const PostDetail = () => {
                         </Typography>
 
                         {voteMessage && (
-                            <Alert severity="success" sx={{ mb: 3 }}>
+                            <Alert severity="success" sx={{ mb: 3, borderRadius: "10px" }}>
                                 {voteMessage}
                             </Alert>
                         )}
 
                         {actionError && (
-                            <Alert severity="error" sx={{ mb: 3 }}>
+                            <Alert severity="error" sx={{ mb: 3, borderRadius: "10px" }}>
                                 {actionError}
                             </Alert>
                         )}
 
                         {isAuthenticated && (
-                            <Box sx={{ mb: 4, display: "flex", gap: 2, alignItems: "center" }}>
+                            <Box sx={{ mb: 4, display: "flex", gap: 1.5, alignItems: "center" }}>
                                 <Button
                                     variant="contained"
                                     onClick={() => handleVote("UPVOTE")}
@@ -231,10 +248,12 @@ const PostDetail = () => {
                                     startIcon={
                                         votingType === "UPVOTE" ? (
                                             <CircularProgress size={16} color="inherit" />
-                                        ) : null
+                                        ) : (
+                                            <ThumbUpOutlinedIcon />
+                                        )
                                     }
                                 >
-                                    👍 Upvote
+                                    Upvote
                                 </Button>
 
                                 <Button
@@ -244,10 +263,12 @@ const PostDetail = () => {
                                     startIcon={
                                         votingType === "DOWNVOTE" ? (
                                             <CircularProgress size={16} color="inherit" />
-                                        ) : null
+                                        ) : (
+                                            <ThumbDownOutlinedIcon />
+                                        )
                                     }
                                 >
-                                    👎 Downvote
+                                    Downvote
                                 </Button>
                             </Box>
                         )}
@@ -257,8 +278,8 @@ const PostDetail = () => {
                         <CommentSection postId={post.id} />
                     </CardContent>
                 </Card>
-            </Box>
-        </Container>
+            </Container>
+        </Box>
     );
 };
 

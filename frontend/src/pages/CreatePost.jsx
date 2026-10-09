@@ -4,15 +4,20 @@ import {
     Alert,
     Box,
     Button,
+    Chip,
     Container,
     Paper,
     TextField,
     Typography,
 } from "@mui/material";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import SendIcon from "@mui/icons-material/Send";
 
 import { createPost } from "../api/postApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+
+const POPULAR_CATEGORIES = ["Academics", "Facilities", "Housing", "Events", "Safety", "General"];
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -40,6 +45,16 @@ const CreatePost = () => {
                 ...prev,
                 [name]: "",
             }));
+        }
+    };
+
+    const handleSelectCategory = (cat) => {
+        setFormData((prev) => ({
+            ...prev,
+            category: cat,
+        }));
+        if (errors.category) {
+            setErrors((prev) => ({ ...prev, category: "" }));
         }
     };
 
@@ -91,23 +106,43 @@ const CreatePost = () => {
     };
 
     return (
-        <Container maxWidth="md">
-            <Box sx={{ mt: 5 }}>
-                <Paper sx={{ p: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Create Anonymous Post
-                    </Typography>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 8 } }}>
+            <Container maxWidth="md">
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: { xs: 3, md: 5 },
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "16px",
+                        bgcolor: "#FFFFFF",
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "10px",
+                                bgcolor: "rgba(79, 70, 229, 0.1)",
+                                color: "#4F46E5",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <SecurityOutlinedIcon />
+                        </Box>
+                        <Typography variant="h2" sx={{ fontSize: { xs: "1.5rem", md: "1.875rem" }, fontWeight: 800 }}>
+                            Create Anonymous Post
+                        </Typography>
+                    </Box>
 
-                    <Typography
-                        color="text.secondary"
-                        sx={{ mb: 3 }}
-                    >
-                        Share your campus experience without revealing
-                        your identity.
+                    <Typography variant="body1" sx={{ color: "#64748B", mb: 4, pl: 7 }}>
+                        Share your thoughts, suggestions, or concerns. Your real identity is never displayed.
                     </Typography>
 
                     {error && (
-                        <Alert severity="error" sx={{ mb: 3 }}>
+                        <Alert severity="error" sx={{ mb: 4, borderRadius: "12px" }}>
                             {error}
                         </Alert>
                     )}
@@ -125,6 +160,7 @@ const CreatePost = () => {
                         <TextField
                             label="Title"
                             name="title"
+                            placeholder="Summarize your concern or idea..."
                             value={formData.title}
                             onChange={handleChange}
                             error={Boolean(errors.title)}
@@ -134,9 +170,45 @@ const CreatePost = () => {
                             fullWidth
                         />
 
+                        <Box>
+                            <TextField
+                                label="Category"
+                                name="category"
+                                placeholder="Select or type a category (e.g. Academics, Facilities)..."
+                                value={formData.category}
+                                onChange={handleChange}
+                                error={Boolean(errors.category)}
+                                helperText={errors.category}
+                                disabled={loading}
+                                required
+                                fullWidth
+                            />
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, flexWrap: "wrap" }}>
+                                <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 600 }}>
+                                    Suggestions:
+                                </Typography>
+                                {POPULAR_CATEGORIES.map((cat) => (
+                                    <Chip
+                                        key={cat}
+                                        label={cat}
+                                        size="small"
+                                        onClick={() => handleSelectCategory(cat)}
+                                        sx={{
+                                            bgcolor: formData.category === cat ? "rgba(79, 70, 229, 0.12)" : "#F1F5F9",
+                                            color: formData.category === cat ? "#4F46E5" : "#64748B",
+                                            fontWeight: 600,
+                                            cursor: "pointer",
+                                            "&:hover": { bgcolor: "rgba(79, 70, 229, 0.15)" },
+                                        }}
+                                    />
+                                ))}
+                            </Box>
+                        </Box>
+
                         <TextField
                             label="Content"
                             name="content"
+                            placeholder="Provide full details of your post..."
                             value={formData.content}
                             onChange={handleChange}
                             error={Boolean(errors.content)}
@@ -148,30 +220,22 @@ const CreatePost = () => {
                             fullWidth
                         />
 
-                        <TextField
-                            label="Category"
-                            name="category"
-                            value={formData.category}
-                            onChange={handleChange}
-                            error={Boolean(errors.category)}
-                            helperText={errors.category}
-                            disabled={loading}
-                            required
-                            fullWidth
-                        />
-
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            size="large"
-                            disabled={loading}
-                        >
-                            {loading ? "Posting..." : "Create Post"}
-                        </Button>
+                        <Box sx={{ display: "flex", justifyContent: "flex-end", pt: 1 }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                disabled={loading}
+                                endIcon={loading ? null : <SendIcon />}
+                                sx={{ py: 1.25, px: 4 }}
+                            >
+                                {loading ? "Publishing..." : "Publish Post"}
+                            </Button>
+                        </Box>
                     </Box>
                 </Paper>
-            </Box>
-        </Container>
+            </Container>
+        </Box>
     );
 };
 

@@ -14,6 +14,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 
 import { createReport } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
@@ -92,7 +93,7 @@ const ReportPost = () => {
             );
 
             if (data.success) {
-                setMessage(data.message || "Report submitted successfully");
+                setMessage(data.message || "Report submitted successfully. Thank you for keeping campus safe.");
 
                 setTimeout(() => {
                     navigate("/posts");
@@ -106,21 +107,49 @@ const ReportPost = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ mt: 5 }}>
-                <Paper sx={{ p: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Report Post
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 6, md: 8 } }}>
+            <Container maxWidth="sm">
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: { xs: 3, sm: 5 },
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "16px",
+                        bgcolor: "#FFFFFF",
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "10px",
+                                bgcolor: "rgba(239, 68, 68, 0.1)",
+                                color: "#EF4444",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <ReportProblemOutlinedIcon />
+                        </Box>
+                        <Typography variant="h2" sx={{ fontSize: { xs: "1.5rem", md: "1.75rem" }, fontWeight: 800 }}>
+                            Report Post
+                        </Typography>
+                    </Box>
+
+                    <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+                        Help community moderators maintain safety and academic guidelines.
                     </Typography>
 
                     {message && (
-                        <Alert severity="success" sx={{ mb: 2 }}>
+                        <Alert severity="success" sx={{ mb: 3, borderRadius: "10px" }}>
                             {message}
                         </Alert>
                     )}
 
                     {error && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
+                        <Alert severity="error" sx={{ mb: 3, borderRadius: "10px" }}>
                             {error}
                         </Alert>
                     )}
@@ -145,9 +174,9 @@ const ReportPost = () => {
                                 onChange={handleChange}
                             >
                                 <MenuItem value="SPAM">Spam</MenuItem>
-                                <MenuItem value="HARASSMENT">Harassment</MenuItem>
+                                <MenuItem value="HARASSMENT">Harassment or Bullying</MenuItem>
                                 <MenuItem value="INAPPROPRIATE">Inappropriate Content</MenuItem>
-                                <MenuItem value="OTHER">Other</MenuItem>
+                                <MenuItem value="OTHER">Other Reason</MenuItem>
                             </Select>
                             {errors.reason && (
                                 <FormHelperText>{errors.reason}</FormHelperText>
@@ -155,15 +184,16 @@ const ReportPost = () => {
                         </FormControl>
 
                         <TextField
-                            label="Description *"
+                            label="Detailed Explanation *"
                             name="description"
+                            placeholder="Explain why this content violates community guidelines..."
                             value={formData.description}
                             onChange={handleChange}
                             error={Boolean(errors.description)}
                             helperText={errors.description}
                             disabled={loading}
                             multiline
-                            rows={5}
+                            rows={4}
                             fullWidth
                         />
 
@@ -172,13 +202,15 @@ const ReportPost = () => {
                             variant="contained"
                             size="large"
                             disabled={loading}
+                            color="error"
+                            sx={{ py: 1.25 }}
                         >
-                            {loading ? "Submitting..." : "Submit Report"}
+                            {loading ? "Submitting Report..." : "Submit Report"}
                         </Button>
                     </Box>
                 </Paper>
-            </Box>
-        </Container>
+            </Container>
+        </Box>
     );
 };
 
