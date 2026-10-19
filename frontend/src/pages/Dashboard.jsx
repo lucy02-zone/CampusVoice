@@ -39,7 +39,7 @@ import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined
 import AddIcon from "@mui/icons-material/Add";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlined";
 
 import { useAuth } from "../context/AuthContext";
 import { getPosts, getPostStats } from "../api/postApi";

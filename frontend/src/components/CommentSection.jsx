@@ -10,7 +10,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 

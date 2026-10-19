@@ -21,7 +21,7 @@ import {
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";

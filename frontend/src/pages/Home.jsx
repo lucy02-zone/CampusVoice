@@ -16,7 +16,7 @@ import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 
 import { useAuth } from "../context/AuthContext";
