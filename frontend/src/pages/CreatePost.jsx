@@ -6,12 +6,16 @@ import {
     Button,
     Chip,
     Container,
+    FormControlLabel,
     Paper,
+    Switch,
     TextField,
     Typography,
 } from "@mui/material";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonIcon from "@mui/icons-material/Person";
 
 import { createPost } from "../api/postApi";
 import { useAuth } from "../context/AuthContext";

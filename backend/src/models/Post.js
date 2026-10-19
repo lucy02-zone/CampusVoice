@@ -34,6 +34,17 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+
+    isAnonymous: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+
+    authorName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: "posts",

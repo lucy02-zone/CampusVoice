@@ -5,7 +5,7 @@ const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
 const createPost = async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const { title, content, category, isAnonymous } = req.body;
 
     if (!title || !content || !category) {
       return res.status(400).json({
@@ -14,12 +14,16 @@ const createPost = async (req, res) => {
       });
     }
 
+    const anonymous = isAnonymous !== false; // default true
+
     const post = await Post.create({
       userId: req.user.id,
       anonymousId: req.user.anonymousHandle || generateAnonymousHandle(req.user.id),
       title,
       content,
       category,
+      isAnonymous: anonymous,
+      authorName: anonymous ? null : req.user.name,
     });
 
     res.status(201).json({
