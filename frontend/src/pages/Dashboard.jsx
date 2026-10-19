@@ -498,7 +498,7 @@ const Dashboard = () => {
                             </Typography>
 
                             <Grid container spacing={2.5}>
-                                <Grid item xs={12} sm={6} lg={3}>
+                                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                                     <StatCard
                                         label="Total Posts"
                                         value={stats.totalPosts}
@@ -508,7 +508,7 @@ const Dashboard = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={6} lg={3}>
+                                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                                     <StatCard
                                         label="Categories"
                                         value={stats.totalCategories}
@@ -518,7 +518,7 @@ const Dashboard = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={6} lg={3}>
+                                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                                     <StatCard
                                         label="Notifications"
                                         value={stats.totalNotifications}
@@ -528,7 +528,7 @@ const Dashboard = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={6} lg={3}>
+                                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                                     <StatCard
                                         label={isMentor ? "Pending Reports" : "Reputation Score"}
                                         value={isMentor ? stats.pendingReports : stats.userActivity.reputation}
@@ -547,7 +547,7 @@ const Dashboard = () => {
                             </Typography>
 
                             <Grid container spacing={2.5}>
-                                <Grid item xs={12} lg={8}>
+                                <Grid size={{ xs: 12, lg: 8 }}>
                                     <ChartPanel
                                         title="Post Activity Trend"
                                         subtitle="Posts submitted over recent days"
@@ -591,7 +591,7 @@ const Dashboard = () => {
                                     </ChartPanel>
                                 </Grid>
 
-                                <Grid item xs={12} lg={4}>
+                                <Grid size={{ xs: 12, lg: 4 }}>
                                     <ChartPanel
                                         title="Category Distribution"
                                         subtitle="Posts broken down by category"
@@ -625,7 +625,7 @@ const Dashboard = () => {
                                     </ChartPanel>
                                 </Grid>
 
-                                <Grid item xs={12} md={isMentor ? 6 : 12}>
+                                <Grid size={{ xs: 12, md: isMentor ? 6 : 12 }}>
                                     <ChartPanel
                                         title="Your Engagement Overview"
                                         subtitle="Summary of your posts, comments, and votes"
@@ -652,7 +652,7 @@ const Dashboard = () => {
                                 </Grid>
 
                                 {isMentor && (
-                                    <Grid item xs={12} md={6}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <ChartPanel
                                             title="Report Resolution Status"
                                             subtitle={`${stats.totalReports} total reports submitted`}

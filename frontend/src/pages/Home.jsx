@@ -169,7 +169,7 @@ const Home = () => {
 
                     <Grid container spacing={3}>
                         {features.map((item, index) => (
-                            <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <Card
                                     elevation={0}
                                     sx={{
