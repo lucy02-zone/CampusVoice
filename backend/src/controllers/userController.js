@@ -46,6 +46,35 @@ const getMentors = async (_req, res) => {
   }
 };
 
+const updateMentor = async (req, res) => {
+  try {
+    const mentor = await User.findOne({ where: { id: req.params.id, role: "MENTOR" } });
+    if (!mentor) {
+      return res.status(404).json({ success: false, message: "Mentor account not found" });
+    }
+
+    const name = req.body.name?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    if (!name || !email) {
+      return res.status(400).json({ success: false, message: "Name and email are required" });
+    }
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser && existingUser.id !== mentor.id) {
+      return res.status(409).json({ success: false, message: "An account already uses this email" });
+    }
+
+    await mentor.update({ name, email });
+    return res.json({
+      success: true,
+      message: "Mentor account updated successfully",
+      user: { id: mentor.id, name: mentor.name, email: mentor.email, role: mentor.role, createdAt: mentor.createdAt },
+    });
+  } catch (error) {
+    console.error("Update mentor error:", error.message);
+    return res.status(500).json({ success: false, message: "Server error updating mentor account" });
+  }
+};
+
 const getUserStats = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -104,4 +133,5 @@ module.exports = {
   getUserStats,
   createMentor,
   getMentors,
+  updateMentor,
 };
