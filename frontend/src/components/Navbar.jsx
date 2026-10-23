@@ -60,6 +60,13 @@ const Navbar = () => {
               { label: "Complaints", path: "/admin/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
               { label: "Mentors", path: "/admin/mentors", icon: <PersonAddAlt1OutlinedIcon fontSize="small" /> },
           ]
+        : isMentor
+        ? [
+              { label: "Mentor Workspace", path: "/mentor", icon: <DashboardOutlinedIcon fontSize="small" /> },
+              { label: "Complaints", path: "/mentor/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
+              { label: "Reports", path: "/mentor/reports", icon: <FlagOutlinedIcon fontSize="small" /> },
+              { label: "Campus Feed", path: "/posts", icon: <ArticleOutlinedIcon fontSize="small" /> },
+          ]
         : [
         { label: "Feed", path: "/posts", icon: <ArticleOutlinedIcon fontSize="small" /> },
         ...(isAuthenticated

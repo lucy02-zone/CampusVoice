@@ -18,6 +18,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CreateComplaint from "./pages/CreateComplaint";
 import AdminComplaints from "./pages/AdminComplaints";
 import AdminMentors from "./pages/AdminMentors";
+import MentorDashboard from "./pages/MentorDashboard";
+import MentorComplaints from "./pages/MentorComplaints";
 const App = () => {
   return (
     <BrowserRouter>
@@ -28,6 +30,9 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><Dashboard /></ProtectedRoute>} />
+        <Route path="/mentor" element={<ProtectedRoute requiredRole="MENTOR"><MentorDashboard /></ProtectedRoute>} />
+        <Route path="/mentor/complaints" element={<ProtectedRoute requiredRole="MENTOR"><MentorComplaints /></ProtectedRoute>} />
+        <Route path="/mentor/reports" element={<ProtectedRoute requiredRole="MENTOR"><AdminReports /></ProtectedRoute>} />
         <Route path="/posts" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><Posts /></ProtectedRoute>} />
         <Route
           path="/create-post"

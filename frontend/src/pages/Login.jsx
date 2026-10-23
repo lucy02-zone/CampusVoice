@@ -49,7 +49,7 @@ const Login = ({ adminOnly = false }) => {
                     return;
                 }
                 login(data);
-                navigate(adminOnly ? "/admin" : data.user?.role === "ADMIN" ? "/admin" : "/");
+                navigate(adminOnly ? "/admin" : data.user?.role === "ADMIN" ? "/admin" : data.user?.role === "MENTOR" ? "/mentor" : "/");
             }
         } catch (error) {
             setError(getApiErrorMessage(error, "Login failed"));

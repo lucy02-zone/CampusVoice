@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.post("/", protect, authorize("STUDENT", "MENTOR"), createReport);
 
-router.get("/", protect, authorize("ADMIN"), getReports);
+router.get("/", protect, authorize("ADMIN", "MENTOR"), getReports);
 
 module.exports = router;

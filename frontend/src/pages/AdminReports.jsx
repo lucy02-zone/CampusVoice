@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
     Alert,
     Box,
+    Button,
     Card,
     CardContent,
     Chip,
@@ -13,13 +15,15 @@ import {
 } from "@mui/material";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 
 import { getReports } from "../api/reportApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
 
 const AdminReports = () => {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
+    const isMentor = user?.role === "MENTOR";
 
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -207,6 +211,18 @@ const AdminReports = () => {
                                                 Reported on {formatDate(report.createdAt)}
                                             </Typography>
                                         </Box>
+
+                                        {isMentor && report.postId && (
+                                            <Button
+                                                component={Link}
+                                                to={`/posts/${report.postId}`}
+                                                variant="outlined"
+                                                size="small"
+                                                endIcon={<ArrowForwardOutlinedIcon fontSize="small" />}
+                                            >
+                                                Review Post
+                                            </Button>
+                                        )}
 
                                     </Box>
                                 </CardContent>

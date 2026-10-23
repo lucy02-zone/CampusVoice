@@ -115,6 +115,17 @@ const Home = () => {
                         >
                             Open Admin Dashboard
                         </Button>
+                    ) : isAuthenticated && user?.role === "MENTOR" ? (
+                        <Button
+                            variant="contained"
+                            size="large"
+                            component={Link}
+                            to="/mentor"
+                            endIcon={<ArrowForwardOutlinedIcon />}
+                            sx={{ py: 1.5, px: 4, fontSize: "0.9375rem" }}
+                        >
+                            Open Mentor Workspace
+                        </Button>
                     ) : isAuthenticated ? (
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
                             <Button

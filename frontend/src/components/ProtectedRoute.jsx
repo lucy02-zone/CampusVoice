@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children, requiredRole, disallowedRoles = [] }) => {
     }
 
     const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-    const homePath = user?.role === "ADMIN" ? "/admin" : "/dashboard";
+    const homePath = user?.role === "ADMIN" ? "/admin" : user?.role === "MENTOR" ? "/mentor" : "/dashboard";
     if (requiredRole && !allowedRoles.includes(user?.role)) {
         return <Navigate to={homePath} replace />;
     }

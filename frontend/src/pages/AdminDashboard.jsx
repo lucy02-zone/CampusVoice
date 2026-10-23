@@ -27,8 +27,8 @@ const sections = [
         icon: <RateReviewOutlinedIcon />,
     },
     {
-        title: "Create mentors",
-        description: "Create a secure login for a campus mentor.",
+        title: "Mentor accounts",
+        description: "Create mentor logins and monitor all mentor accounts.",
         path: "/admin/mentors",
         icon: <PersonAddAlt1OutlinedIcon />,
     },

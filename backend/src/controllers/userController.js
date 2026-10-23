@@ -32,6 +32,20 @@ const createMentor = async (req, res) => {
   }
 };
 
+const getMentors = async (_req, res) => {
+  try {
+    const mentors = await User.findAll({
+      where: { role: "MENTOR" },
+      attributes: ["id", "name", "email", "createdAt"],
+      order: [["createdAt", "DESC"]],
+    });
+    return res.json({ success: true, mentors });
+  } catch (error) {
+    console.error("Get mentors error:", error.message);
+    return res.status(500).json({ success: false, message: "Server error loading mentors" });
+  }
+};
+
 const getUserStats = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -89,4 +103,5 @@ const getUserStats = async (req, res) => {
 module.exports = {
   getUserStats,
   createMentor,
+  getMentors,
 };
