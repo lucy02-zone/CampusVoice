@@ -52,7 +52,13 @@ const Navbar = () => {
         navigate("/login");
     };
 
-    const navItems = [
+    const navItems = isAdmin
+        ? [
+              { label: "Admin Dashboard", path: "/admin", icon: <DashboardOutlinedIcon fontSize="small" /> },
+              { label: "Reports", path: "/admin/reports", icon: <FlagOutlinedIcon fontSize="small" /> },
+              { label: "Complaints", path: "/admin/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
+          ]
+        : [
         { label: "Feed", path: "/posts", icon: <ArticleOutlinedIcon fontSize="small" /> },
         ...(isAuthenticated
             ? [
@@ -60,21 +66,12 @@ const Navbar = () => {
                   { label: "New Post", path: "/create-post", icon: <AddCircleOutlineIcon fontSize="small" /> },
                   ...(!isAdmin ? [{ label: "Raise Complaint", path: "/complaints/new", icon: <RateReviewOutlinedIcon fontSize="small" /> }] : []),
                   { label: "Notifications", path: "/notifications", icon: <NotificationsOutlinedIcon fontSize="small" /> },
-                  ...(isAdmin
-                      ? [{ label: "Admin Dashboard", path: "/admin", icon: <DashboardOutlinedIcon fontSize="small" /> }]
-                      : []),
-                  ...(isAdmin
-                      ? [
-                            { label: "Reports", path: "/admin/reports", icon: <FlagOutlinedIcon fontSize="small" /> },
-                            { label: "Complaints", path: "/admin/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
-                        ]
-                      : []),
               ]
             : [
                   { label: "Log in", path: "/login", icon: <LoginOutlinedIcon fontSize="small" /> },
                   { label: "Register", path: "/register", icon: <PersonAddOutlinedIcon fontSize="small" /> },
               ]),
-    ];
+          ];
 
     const getInitials = (name) => {
         if (!name) return "U";
@@ -93,7 +90,7 @@ const Navbar = () => {
                     {/* Brand Logo */}
                     <Box
                         component={Link}
-                        to="/"
+                        to={isAdmin ? "/admin" : "/"}
                         sx={{
                             display: "flex",
                             alignItems: "center",

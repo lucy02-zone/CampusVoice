@@ -20,9 +20,9 @@ const sections = [
         icon: <FlagOutlinedIcon />,
     },
     {
-        title: "Complaint responses",
-        description: "View and manage official responses to campus complaints.",
-        path: "/admin/complaint-responses",
+        title: "Complaints",
+        description: "Review and manage campus complaints.",
+        path: "/admin/complaints",
         icon: <RateReviewOutlinedIcon />,
     },
 ];
