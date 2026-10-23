@@ -14,12 +14,16 @@ import AdminReports from "./pages/AdminReports";
 import AdminComplaintResponses from "./pages/AdminComplaintResponses";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/AdminDashboard";
+import CreateComplaint from "./pages/CreateComplaint";
+import AdminComplaints from "./pages/AdminComplaints";
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<Login adminOnly />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
         <Route
@@ -39,6 +43,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/complaints/new" element={<ProtectedRoute><CreateComplaint /></ProtectedRoute>} />
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route
           path="/notifications"
@@ -57,17 +62,26 @@ const App = () => {
           }
         />
         <Route
-          path="/admin/reports"
+          path="/admin"
           element={
-            <ProtectedRoute>
-              <AdminReports />
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
         <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminReports />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/complaints" element={<ProtectedRoute requiredRole="ADMIN"><AdminComplaints /></ProtectedRoute>} />
+        <Route
           path="/admin/complaint-responses"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="ADMIN">
               <AdminComplaintResponses />
             </ProtectedRoute>
           }

@@ -5,6 +5,7 @@ const Vote = require("./Vote");
 const Notification = require("./Notification");
 const ComplaintResponse = require("./ComplaintResponse");
 const Report = require("./Report");
+const Complaint = require("./Complaint");
 
 // User → Posts
 User.hasMany(Post, {
@@ -78,6 +79,9 @@ Report.belongsTo(User, {
   foreignKey: "userId",
 });
 
+User.hasMany(Complaint, { foreignKey: "userId" });
+Complaint.belongsTo(User, { foreignKey: "userId" });
+
 module.exports = {
   User,
   Post,
@@ -86,4 +90,5 @@ module.exports = {
   Notification,
   ComplaintResponse,
   Report,
+  Complaint,
 };

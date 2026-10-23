@@ -40,6 +40,7 @@ const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const isMentor = user?.role === "MENTOR";
+    const isAdmin = user?.role === "ADMIN";
 
     const handleDrawerToggle = () => {
         setMobileOpen((prev) => !prev);
@@ -57,11 +58,15 @@ const Navbar = () => {
             ? [
                   { label: "Dashboard", path: "/dashboard", icon: <DashboardOutlinedIcon fontSize="small" /> },
                   { label: "New Post", path: "/create-post", icon: <AddCircleOutlineIcon fontSize="small" /> },
+                  ...(!isAdmin ? [{ label: "Raise Complaint", path: "/complaints/new", icon: <RateReviewOutlinedIcon fontSize="small" /> }] : []),
                   { label: "Notifications", path: "/notifications", icon: <NotificationsOutlinedIcon fontSize="small" /> },
-                  ...(isMentor
+                  ...(isAdmin
+                      ? [{ label: "Admin Dashboard", path: "/admin", icon: <DashboardOutlinedIcon fontSize="small" /> }]
+                      : []),
+                  ...(isAdmin
                       ? [
                             { label: "Reports", path: "/admin/reports", icon: <FlagOutlinedIcon fontSize="small" /> },
-                            { label: "Complaints", path: "/admin/complaint-responses", icon: <RateReviewOutlinedIcon fontSize="small" /> },
+                            { label: "Complaints", path: "/admin/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
                         ]
                       : []),
               ]

@@ -175,6 +175,7 @@ const CustomTooltipContent = ({ active, payload, label }) => {
 
 const Dashboard = () => {
     const { user, token } = useAuth();
+    const isAdmin = user?.role === "ADMIN";
     const isMentor = user?.role === "MENTOR";
 
     const [stats, setStats] = useState({
@@ -278,7 +279,7 @@ const Dashboard = () => {
                     );
                 }
 
-                if (isMentor && token) {
+                if (isAdmin && token) {
                     optionalRequests.push(
                         getReports(token)
                             .then((result) => {
@@ -352,7 +353,7 @@ const Dashboard = () => {
         return () => {
             active = false;
         };
-    }, [token, isMentor]);
+    }, [token, isAdmin]);
 
     const activityData = [
         { name: "Posts", value: stats.userActivity.postsCount || 0 },
@@ -388,19 +389,28 @@ const Dashboard = () => {
                         </Typography>
                     </Box>
 
-                    <Button
-                        component={Link}
-                        to="/create-post"
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        sx={{
-                            borderRadius: "10px",
-                            px: 2.5,
-                            py: 1.25,
-                        }}
-                    >
-                        New Post
-                    </Button>
+                    <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+                        {!isAdmin && (
+                            <Button
+                                component={Link}
+                                to="/complaints/new"
+                                variant="outlined"
+                                startIcon={<ReportProblemOutlinedIcon />}
+                                sx={{ borderRadius: "10px", px: 2.5, py: 1.25 }}
+                            >
+                                Raise Complaint
+                            </Button>
+                        )}
+                        <Button
+                            component={Link}
+                            to="/create-post"
+                            variant="contained"
+                            startIcon={<AddIcon />}
+                            sx={{ borderRadius: "10px", px: 2.5, py: 1.25 }}
+                        >
+                            New Post
+                        </Button>
+                    </Box>
                 </Box>
 
                 {error && (
@@ -530,11 +540,11 @@ const Dashboard = () => {
 
                                 <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                                     <StatCard
-                                        label={isMentor ? "Pending Reports" : "Reputation Score"}
-                                        value={isMentor ? stats.pendingReports : stats.userActivity.reputation}
-                                        icon={isMentor ? ReportProblemOutlinedIcon : ShieldOutlinedIcon}
-                                        accent={isMentor ? "#EF4444" : "#10B981"}
-                                        caption={isMentor ? "Reports awaiting action" : "Your community score"}
+                                        label={isAdmin ? "Pending Reports" : "Reputation Score"}
+                                        value={isAdmin ? stats.pendingReports : stats.userActivity.reputation}
+                                        icon={isAdmin ? ReportProblemOutlinedIcon : ShieldOutlinedIcon}
+                                        accent={isAdmin ? "#EF4444" : "#10B981"}
+                                        caption={isAdmin ? "Reports awaiting action" : "Your community score"}
                                     />
                                 </Grid>
                             </Grid>
@@ -625,7 +635,7 @@ const Dashboard = () => {
                                     </ChartPanel>
                                 </Grid>
 
-                                <Grid size={{ xs: 12, md: isMentor ? 6 : 12 }}>
+                                <Grid size={{ xs: 12, md: isAdmin ? 6 : 12 }}>
                                     <ChartPanel
                                         title="Your Engagement Overview"
                                         subtitle="Summary of your posts, comments, and votes"
@@ -651,7 +661,7 @@ const Dashboard = () => {
                                     </ChartPanel>
                                 </Grid>
 
-                                {isMentor && (
+                                {isAdmin && (
                                     <Grid size={{ xs: 12, md: 6 }}>
                                         <ChartPanel
                                             title="Report Resolution Status"

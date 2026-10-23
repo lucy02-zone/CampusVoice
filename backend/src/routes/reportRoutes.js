@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.post("/", protect, createReport);
 
-// Only mentors can view reports
-router.get("/", protect, authorize("MENTOR"), getReports);
+router.get("/", protect, authorize("ADMIN"), getReports);
 
 module.exports = router;

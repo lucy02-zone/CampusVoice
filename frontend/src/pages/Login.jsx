@@ -16,7 +16,7 @@ import { loginUser } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
 
-const Login = () => {
+const Login = ({ adminOnly = false }) => {
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -44,8 +44,12 @@ const Login = () => {
             const data = await loginUser(formData);
 
             if (data.success) {
+                if (adminOnly && data.user?.role !== "ADMIN") {
+                    setError("This account does not have administrator access.");
+                    return;
+                }
                 login(data);
-                navigate("/");
+                navigate(adminOnly ? "/admin" : data.user?.role === "ADMIN" ? "/admin" : "/");
             }
         } catch (error) {
             setError(getApiErrorMessage(error, "Login failed"));
@@ -85,11 +89,11 @@ const Login = () => {
                         </Box>
 
                         <Typography variant="h4" sx={{ fontWeight: 800, color: "#0F172A", mb: 0.5 }}>
-                            Welcome Back
+                            {adminOnly ? "Administrator Sign In" : "Welcome Back"}
                         </Typography>
 
                         <Typography variant="body2" sx={{ color: "#64748B" }}>
-                            Log in to access your CampusVoice dashboard.
+                            {adminOnly ? "Sign in with your administrator account." : "Log in to access your CampusVoice dashboard."}
                         </Typography>
                     </Box>
 
@@ -142,16 +146,12 @@ const Login = () => {
                         </Button>
 
                         <Box sx={{ textAlign: "center", mt: 1 }}>
-                            <Typography variant="body2" sx={{ color: "#64748B" }}>
+                            {!adminOnly && <Typography variant="body2" sx={{ color: "#64748B", mb: 1 }}>
                                 Don't have an account?{" "}
-                                <Typography
-                                    component={Link}
-                                    to="/register"
-                                    variant="body2"
-                                    sx={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
-                                >
-                                    Register here
-                                </Typography>
+                                <Typography component={Link} to="/register" variant="body2" sx={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>Register here</Typography>
+                            </Typography>}
+                            <Typography component={Link} to={adminOnly ? "/login" : "/admin/login"} variant="body2" sx={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>
+                                {adminOnly ? "Student or mentor sign in" : "Administrator sign in"}
                             </Typography>
                         </Box>
                     </Box>

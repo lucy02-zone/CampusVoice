@@ -164,7 +164,7 @@ const Register = () => {
                                 onChange={handleChange}
                             >
                                 <MenuItem value="STUDENT">Student</MenuItem>
-                                <MenuItem value="MENTOR">Mentor / Admin</MenuItem>
+                                <MenuItem value="MENTOR">Mentor</MenuItem>
                             </Select>
                         </FormControl>
 

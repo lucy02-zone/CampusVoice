@@ -3,6 +3,11 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
+const getCurrentUser = async (req, res) => {
+  const { id, name, email, role, anonymousHandle } = req.user;
+  res.json({ success: true, user: { id, name, email, role, anonymousHandle } });
+};
+
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -11,6 +16,15 @@ const register = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Name, email and password are required",
+      });
+    }
+
+    if (role && !["STUDENT", "MENTOR"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: role === "ADMIN"
+          ? "Admin accounts must be provisioned through an authorized process"
+          : "Invalid account role",
       });
     }
 
@@ -126,4 +140,5 @@ const login = async (req, res) => {
 module.exports = {
   register,
   login,
+  getCurrentUser,
 };

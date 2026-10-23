@@ -13,14 +13,14 @@ const router = express.Router();
 router.post(
     "/",
     protect,
-    authorize("MENTOR"),
+    authorize("ADMIN"),
     createComplaintResponse
 );
 
 router.get(
     "/",
     protect,
-    authorize("MENTOR"),
+    authorize("ADMIN"),
     getComplaintResponses
 );
 
