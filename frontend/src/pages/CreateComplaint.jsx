@@ -32,11 +32,11 @@ const CreateComplaint = () => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 7 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 7 } }}>
             <Container maxWidth="sm">
-                <Paper component="form" onSubmit={handleSubmit} elevation={0} sx={{ p: { xs: 3, md: 5 }, border: "1px solid #E2E8F0", borderRadius: "16px" }}>
+                <Paper component="form" onSubmit={handleSubmit} elevation={0} sx={{ p: { xs: 3, md: 5 }, border: "1px solid #DCE6E3", borderRadius: "16px" }}>
                     <Typography variant="h2" sx={{ fontSize: { xs: "1.6rem", md: "2rem" }, fontWeight: 800, mb: 1 }}>Raise a Complaint</Typography>
-                    <Typography sx={{ color: "#64748B", mb: 3 }}>Submit a campus concern directly to the administration, separately from community posts.</Typography>
+                    <Typography sx={{ color: "#647B84", mb: 3 }}>Submit a campus concern directly to the administration, separately from community posts.</Typography>
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
                         <TextField label="Subject" required value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} disabled={loading} inputProps={{ maxLength: 160 }} />

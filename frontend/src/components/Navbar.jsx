@@ -113,12 +113,12 @@ const Navbar = () => {
                                 width: 36,
                                 height: 36,
                                 borderRadius: "10px",
-                                background: "linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)",
+                                background: "linear-gradient(135deg, #0F766E 0%, #115E59 100%)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 color: "#FFFFFF",
-                                boxShadow: "0 4px 10px rgba(79, 70, 229, 0.25)",
+                                boxShadow: "0 4px 10px rgba(15, 118, 110, 0.25)",
                             }}
                         >
                             <CampaignIcon fontSize="small" />
@@ -128,10 +128,10 @@ const Navbar = () => {
                             sx={{
                                 fontWeight: 800,
                                 letterSpacing: "-0.02em",
-                                color: "#0F172A",
+                                color: "#16324F",
                             }}
                         >
-                            Campus<span style={{ color: "#4F46E5" }}>Voice</span>
+                            Campus<span style={{ color: "#0F766E" }}>Voice</span>
                         </Typography>
                     </Box>
 
@@ -146,17 +146,17 @@ const Navbar = () => {
                                     to={item.path}
                                     startIcon={item.icon}
                                     sx={{
-                                        color: isActive ? "#4F46E5" : "#64748B",
-                                        backgroundColor: isActive ? "rgba(79, 70, 229, 0.08)" : "transparent",
+                                        color: isActive ? "#0F766E" : "#647B84",
+                                        backgroundColor: isActive ? "rgba(15, 118, 110, 0.08)" : "transparent",
                                         fontWeight: isActive ? 700 : 500,
                                         px: 1.75,
                                         py: 0.75,
                                         borderRadius: "10px",
                                         "&:hover": {
                                             backgroundColor: isActive
-                                                ? "rgba(79, 70, 229, 0.12)"
+                                                ? "rgba(15, 118, 110, 0.12)"
                                                 : "rgba(241, 245, 249, 0.9)",
-                                            color: isActive ? "#4338CA" : "#0F172A",
+                                            color: isActive ? "#115E59" : "#16324F",
                                         },
                                     }}
                                 >
@@ -176,7 +176,7 @@ const Navbar = () => {
                                             height: 34,
                                             fontSize: "0.85rem",
                                             fontWeight: 700,
-                                            bgcolor: isMentor ? "#0EA5E9" : "#4F46E5",
+                                            bgcolor: isMentor ? "#2B5D73" : "#0F766E",
                                             color: "#FFFFFF",
                                         }}
                                     >
@@ -193,8 +193,8 @@ const Navbar = () => {
                                                 height: 18,
                                                 fontSize: "0.65rem",
                                                 fontWeight: 700,
-                                                bgcolor: isMentor ? "rgba(14, 165, 233, 0.1)" : "rgba(79, 70, 229, 0.1)",
-                                                color: isMentor ? "#0284C7" : "#4F46E5",
+                                                bgcolor: isMentor ? "rgba(43, 93, 115, 0.1)" : "rgba(15, 118, 110, 0.1)",
+                                                color: isMentor ? "#244A5D" : "#0F766E",
                                                 mt: 0.25,
                                                 "& .MuiChip-label": { px: 0.75 },
                                             }}
@@ -206,9 +206,9 @@ const Navbar = () => {
                                     onClick={handleLogout}
                                     size="small"
                                     sx={{
-                                        color: "#64748B",
+                                        color: "#647B84",
                                         borderRadius: "8px",
-                                        border: "1px solid #E2E8F0",
+                                        border: "1px solid #DCE6E3",
                                         p: 0.75,
                                         "&:hover": {
                                             color: "#EF4444",
@@ -230,7 +230,7 @@ const Navbar = () => {
                         aria-label="open drawer"
                         edge="end"
                         onClick={handleDrawerToggle}
-                        sx={{ display: { md: "none" }, color: "#0F172A" }}
+                        sx={{ display: { md: "none" }, color: "#16324F" }}
                     >
                         {mobileOpen ? <CloseIcon /> : <MenuIcon />}
                     </IconButton>
@@ -245,7 +245,7 @@ const Navbar = () => {
                             sx: {
                                 width: 280,
                                 p: 2,
-                                borderLeft: "1px solid #E2E8F0",
+                                borderLeft: "1px solid #DCE6E3",
                                 background: "#FFFFFF",
                             },
                         }}
@@ -257,7 +257,7 @@ const Navbar = () => {
                                         width: 32,
                                         height: 32,
                                         borderRadius: "8px",
-                                        background: "linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)",
+                                        background: "linear-gradient(135deg, #0F766E 0%, #115E59 100%)",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
@@ -280,8 +280,8 @@ const Navbar = () => {
                                 sx={{
                                     p: 2,
                                     borderRadius: "12px",
-                                    bgcolor: "#F8FAFC",
-                                    border: "1px solid #E2E8F0",
+                                    bgcolor: "#F3F7F6",
+                                    border: "1px solid #DCE6E3",
                                     mb: 2,
                                     display: "flex",
                                     alignItems: "center",
@@ -292,7 +292,7 @@ const Navbar = () => {
                                     sx={{
                                         width: 40,
                                         height: 40,
-                                        bgcolor: isMentor ? "#0EA5E9" : "#4F46E5",
+                                        bgcolor: isMentor ? "#2B5D73" : "#0F766E",
                                         fontWeight: 700,
                                     }}
                                 >
@@ -313,8 +313,8 @@ const Navbar = () => {
                                             height: 18,
                                             fontSize: "0.65rem",
                                             fontWeight: 700,
-                                            bgcolor: isMentor ? "rgba(14, 165, 233, 0.1)" : "rgba(79, 70, 229, 0.1)",
-                                            color: isMentor ? "#0284C7" : "#4F46E5",
+                                            bgcolor: isMentor ? "rgba(43, 93, 115, 0.1)" : "rgba(15, 118, 110, 0.1)",
+                                            color: isMentor ? "#244A5D" : "#0F766E",
                                         }}
                                     />
                                 </Box>
@@ -335,14 +335,14 @@ const Navbar = () => {
                                             selected={isActive}
                                             sx={{
                                                 borderRadius: "10px",
-                                                color: isActive ? "#4F46E5" : "#334155",
+                                                color: isActive ? "#0F766E" : "#3E5664",
                                                 "&.Mui-selected": {
-                                                    bgcolor: "rgba(79, 70, 229, 0.08)",
-                                                    "&:hover": { bgcolor: "rgba(79, 70, 229, 0.12)" },
+                                                    bgcolor: "rgba(15, 118, 110, 0.08)",
+                                                    "&:hover": { bgcolor: "rgba(15, 118, 110, 0.12)" },
                                                 },
                                             }}
                                         >
-                                            <ListItemIcon sx={{ minWidth: 36, color: isActive ? "#4F46E5" : "#64748B" }}>
+                                            <ListItemIcon sx={{ minWidth: 36, color: isActive ? "#0F766E" : "#647B84" }}>
                                                 {item.icon}
                                             </ListItemIcon>
                                             <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }} />

@@ -112,10 +112,10 @@ const PostDetail = () => {
 
     if (loading) {
         return (
-            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: 8 }}>
+            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: 8 }}>
                 <Container maxWidth="md">
                     <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
+                        <CircularProgress size={36} sx={{ color: "#0F766E" }} />
                     </Box>
                 </Container>
             </Box>
@@ -124,7 +124,7 @@ const PostDetail = () => {
 
     if (error || !post) {
         return (
-            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: 6 }}>
+            <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: 6 }}>
                 <Container maxWidth="md">
                     <Button
                         component={Link}
@@ -143,13 +143,13 @@ const PostDetail = () => {
     }
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 6 } }}>
             <Container maxWidth="md">
                 <Button
                     component={Link}
                     to="/posts"
                     startIcon={<ArrowBackIcon />}
-                    sx={{ mb: 3, color: "#64748B" }}
+                    sx={{ mb: 3, color: "#647B84" }}
                 >
                     Back to Posts
                 </Button>
@@ -157,7 +157,7 @@ const PostDetail = () => {
                 <Card
                     elevation={0}
                     sx={{
-                        border: "1px solid #E2E8F0",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "16px",
                         bgcolor: "#FFFFFF",
                     }}
@@ -172,7 +172,7 @@ const PostDetail = () => {
                                 gap: 2,
                             }}
                         >
-                            <Typography variant="h3" component="h1" sx={{ fontSize: { xs: "1.5rem", md: "1.875rem" }, fontWeight: 800, color: "#0F172A" }}>
+                            <Typography variant="h3" component="h1" sx={{ fontSize: { xs: "1.5rem", md: "1.875rem" }, fontWeight: 800, color: "#16324F" }}>
                                 {post.title}
                             </Typography>
 
@@ -180,8 +180,8 @@ const PostDetail = () => {
                                 <Chip
                                     label={post.category}
                                     sx={{
-                                        bgcolor: "rgba(79, 70, 229, 0.08)",
-                                        color: "#4F46E5",
+                                        bgcolor: "rgba(15, 118, 110, 0.08)",
+                                        color: "#0F766E",
                                         fontWeight: 700,
                                         borderRadius: "6px",
                                     }}
@@ -195,18 +195,18 @@ const PostDetail = () => {
                                 alignItems: "center",
                                 gap: 2.5,
                                 mb: 3,
-                                color: "#64748B",
+                                color: "#647B84",
                                 fontSize: "0.875rem",
                             }}
                         >
                             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                                <SecurityOutlinedIcon sx={{ fontSize: 18, color: "#4F46E5" }} />
+                                <SecurityOutlinedIcon sx={{ fontSize: 18, color: "#0F766E" }} />
                                 <span>Author: <strong>{post.anonymousId || "Anonymous"}</strong></span>
                             </Box>
 
                             {post.createdAt && (
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                                    <AccessTimeOutlinedIcon sx={{ fontSize: 18, color: "#94A3B8" }} />
+                                    <AccessTimeOutlinedIcon sx={{ fontSize: 18, color: "#8EA2A7" }} />
                                     <span>Posted on {formatDate(post.createdAt)}</span>
                                 </Box>
                             )}
@@ -219,7 +219,7 @@ const PostDetail = () => {
                             sx={{
                                 mb: 4,
                                 lineHeight: 1.7,
-                                color: "#334155",
+                                color: "#3E5664",
                                 fontSize: "1rem",
                                 whiteSpace: "pre-line",
                             }}

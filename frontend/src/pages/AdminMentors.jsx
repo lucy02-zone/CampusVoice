@@ -102,12 +102,12 @@ const AdminMentors = () => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 6 } }}>
             <Container maxWidth="lg">
                 <Box sx={{ display: "flex", alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between", gap: 2, flexDirection: { xs: "column", sm: "row" }, mb: 3 }}>
                     <Box>
                         <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.25rem" }, fontWeight: 800 }}>Mentor Management</Typography>
-                        <Typography sx={{ color: "#64748B", mt: 0.5 }}>Create, review, and update mentor accounts.</Typography>
+                        <Typography sx={{ color: "#647B84", mt: 0.5 }}>Create, review, and update mentor accounts.</Typography>
                     </Box>
                     <Button variant="contained" startIcon={<AddOutlinedIcon />} onClick={openCreateDialog}>Add Mentor</Button>
                 </Box>
@@ -115,11 +115,11 @@ const AdminMentors = () => {
                 {error && !dialogOpen && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
                 {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-                <Paper elevation={0} sx={{ border: "1px solid #E2E8F0", borderRadius: 4, overflow: "hidden" }}>
+                <Paper elevation={0} sx={{ border: "1px solid #DCE6E3", borderRadius: 4, overflow: "hidden" }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2, flexWrap: "wrap", p: 2.5 }}>
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 750 }}>All mentors</Typography>
-                            <Typography variant="body2" sx={{ color: "#64748B" }}>{mentors.length} account{mentors.length === 1 ? "" : "s"} in CampusVoice</Typography>
+                            <Typography variant="body2" sx={{ color: "#647B84" }}>{mentors.length} account{mentors.length === 1 ? "" : "s"} in CampusVoice</Typography>
                         </Box>
                         <TextField
                             size="small"
@@ -137,7 +137,7 @@ const AdminMentors = () => {
                         <TableContainer>
                             <Table sx={{ minWidth: 720 }} aria-label="Mentor accounts">
                                 <TableHead>
-                                    <TableRow sx={{ bgcolor: "#F8FAFC" }}>
+                                    <TableRow sx={{ bgcolor: "#F3F7F6" }}>
                                         <TableCell sx={{ fontWeight: 700 }}>Mentor</TableCell>
                                         <TableCell sx={{ fontWeight: 700 }}>Email</TableCell>
                                         <TableCell sx={{ fontWeight: 700 }}>Account ID</TableCell>
@@ -161,7 +161,7 @@ const AdminMentors = () => {
                                     ))}
                                     {!visibleMentors.length && (
                                         <TableRow>
-                                            <TableCell colSpan={6} align="center" sx={{ py: 6, color: "#64748B" }}>
+                                            <TableCell colSpan={6} align="center" sx={{ py: 6, color: "#647B84" }}>
                                                 {mentors.length ? "No mentors match your search." : "No mentor accounts yet. Select Add Mentor to create one."}
                                             </TableCell>
                                         </TableRow>

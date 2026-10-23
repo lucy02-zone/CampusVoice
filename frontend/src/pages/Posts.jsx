@@ -93,7 +93,7 @@ const Posts = () => {
     });
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 6 } }}>
             <Container maxWidth="md">
                 {/* Page Header */}
                 <Box
@@ -110,7 +110,7 @@ const Posts = () => {
                         <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2.25rem" }, fontWeight: 800 }}>
                             Campus Feed
                         </Typography>
-                        <Typography variant="body1" sx={{ color: "#64748B", mt: 0.5 }}>
+                        <Typography variant="body1" sx={{ color: "#647B84", mt: 0.5 }}>
                             Browse and discover anonymous posts submitted by students.
                         </Typography>
                     </Box>
@@ -135,7 +135,7 @@ const Posts = () => {
                             py: 8,
                         }}
                     >
-                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
+                        <CircularProgress size={36} sx={{ color: "#0F766E" }} />
                     </Box>
                 )}
 
@@ -151,7 +151,7 @@ const Posts = () => {
                         sx={{
                             p: 2,
                             mb: 4,
-                            border: "1px solid #E2E8F0",
+                            border: "1px solid #DCE6E3",
                             borderRadius: "14px",
                             bgcolor: "#FFFFFF",
                         }}
@@ -172,7 +172,7 @@ const Posts = () => {
                                     input: {
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <SearchIcon sx={{ color: "#94A3B8" }} />
+                                                <SearchIcon sx={{ color: "#8EA2A7" }} />
                                             </InputAdornment>
                                         ),
                                     },
@@ -188,7 +188,7 @@ const Posts = () => {
                                     onChange={(e) => setSelectedCategory(e.target.value)}
                                     startAdornment={
                                         <InputAdornment position="start">
-                                            <FilterListIcon sx={{ color: "#94A3B8", fontSize: 20 }} />
+                                            <FilterListIcon sx={{ color: "#8EA2A7", fontSize: 20 }} />
                                         </InputAdornment>
                                     }
                                 >
@@ -212,16 +212,16 @@ const Posts = () => {
                         sx={{
                             p: 6,
                             textAlign: "center",
-                            border: "1px solid #E2E8F0",
+                            border: "1px solid #DCE6E3",
                             borderRadius: "16px",
                             bgcolor: "#FFFFFF",
                         }}
                     >
-                        <ArticleOutlinedIcon sx={{ fontSize: 48, color: "#94A3B8", mb: 2 }} />
+                        <ArticleOutlinedIcon sx={{ fontSize: 48, color: "#8EA2A7", mb: 2 }} />
                         <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
                             No posts available yet
                         </Typography>
-                        <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+                        <Typography variant="body2" sx={{ color: "#647B84", mb: 3 }}>
                             Be the first to share your campus experience or concern anonymously.
                         </Typography>
                         <Button
@@ -241,7 +241,7 @@ const Posts = () => {
                         sx={{
                             p: 5,
                             textAlign: "center",
-                            border: "1px solid #E2E8F0",
+                            border: "1px solid #DCE6E3",
                             borderRadius: "16px",
                             bgcolor: "#FFFFFF",
                         }}
@@ -249,7 +249,7 @@ const Posts = () => {
                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                             No matching posts found
                         </Typography>
-                        <Typography variant="body2" sx={{ color: "#64748B", mb: 2 }}>
+                        <Typography variant="body2" sx={{ color: "#647B84", mb: 2 }}>
                             Try searching for another keyword or clearing your category filters.
                         </Typography>
                         <Button
@@ -272,14 +272,14 @@ const Posts = () => {
                             elevation={0}
                             sx={{
                                 mb: 3,
-                                border: "1px solid #E2E8F0",
+                                border: "1px solid #DCE6E3",
                                 borderRadius: "16px",
                                 bgcolor: "#FFFFFF",
                                 transition: "all 180ms ease-in-out",
                                 "&:hover": {
                                     transform: "translateY(-2px)",
                                     boxShadow: "0 12px 24px -6px rgba(15, 23, 42, 0.06)",
-                                    borderColor: "#CBD5E1",
+                                    borderColor: "#C5D3D0",
                                 },
                             }}
                         >
@@ -300,9 +300,9 @@ const Posts = () => {
                                         sx={{
                                             fontWeight: 700,
                                             fontSize: "1.25rem",
-                                            color: "#0F172A",
+                                            color: "#16324F",
                                             textDecoration: "none",
-                                            "&:hover": { color: "#4F46E5" },
+                                            "&:hover": { color: "#0F766E" },
                                         }}
                                     >
                                         {post.title}
@@ -313,8 +313,8 @@ const Posts = () => {
                                             label={post.category}
                                             size="small"
                                             sx={{
-                                                bgcolor: "rgba(79, 70, 229, 0.08)",
-                                                color: "#4F46E5",
+                                                bgcolor: "rgba(15, 118, 110, 0.08)",
+                                                color: "#0F766E",
                                                 fontWeight: 700,
                                                 borderRadius: "6px",
                                             }}
@@ -328,18 +328,18 @@ const Posts = () => {
                                         alignItems: "center",
                                         gap: 2,
                                         mb: 2,
-                                        color: "#64748B",
+                                        color: "#647B84",
                                         fontSize: "0.8125rem",
                                     }}
                                 >
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        <SecurityOutlinedIcon sx={{ fontSize: 16, color: "#4F46E5" }} />
+                                        <SecurityOutlinedIcon sx={{ fontSize: 16, color: "#0F766E" }} />
                                         <span>Author: <strong>{post.anonymousId || "Anonymous"}</strong></span>
                                     </Box>
 
                                     {post.createdAt && (
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                            <AccessTimeOutlinedIcon sx={{ fontSize: 16, color: "#94A3B8" }} />
+                                            <AccessTimeOutlinedIcon sx={{ fontSize: 16, color: "#8EA2A7" }} />
                                             <span>{formatDate(post.createdAt)}</span>
                                         </Box>
                                     )}
@@ -348,7 +348,7 @@ const Posts = () => {
                                 <Typography
                                     variant="body1"
                                     sx={{
-                                        color: "#334155",
+                                        color: "#3E5664",
                                         mb: 2,
                                         lineHeight: 1.6,
                                         display: "-webkit-box",

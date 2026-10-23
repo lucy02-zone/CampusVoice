@@ -110,13 +110,13 @@ const CreatePost = () => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 8 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 8 } }}>
             <Container maxWidth="md">
                 <Paper
                     elevation={0}
                     sx={{
                         p: { xs: 3, md: 5 },
-                        border: "1px solid #E2E8F0",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "16px",
                         bgcolor: "#FFFFFF",
                     }}
@@ -127,8 +127,8 @@ const CreatePost = () => {
                                 width: 40,
                                 height: 40,
                                 borderRadius: "10px",
-                                bgcolor: "rgba(79, 70, 229, 0.1)",
-                                color: "#4F46E5",
+                                bgcolor: "rgba(15, 118, 110, 0.1)",
+                                color: "#0F766E",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -141,7 +141,7 @@ const CreatePost = () => {
                         </Typography>
                     </Box>
 
-                    <Typography variant="body1" sx={{ color: "#64748B", mb: 4, pl: 7 }}>
+                    <Typography variant="body1" sx={{ color: "#647B84", mb: 4, pl: 7 }}>
                         Share your thoughts, suggestions, or concerns. Your real identity is never displayed.
                     </Typography>
 
@@ -188,7 +188,7 @@ const CreatePost = () => {
                                 fullWidth
                             />
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, flexWrap: "wrap" }}>
-                                <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 600 }}>
+                                <Typography variant="caption" sx={{ color: "#8EA2A7", fontWeight: 600 }}>
                                     Suggestions:
                                 </Typography>
                                 {POPULAR_CATEGORIES.map((cat) => (
@@ -198,11 +198,11 @@ const CreatePost = () => {
                                         size="small"
                                         onClick={() => handleSelectCategory(cat)}
                                         sx={{
-                                            bgcolor: formData.category === cat ? "rgba(79, 70, 229, 0.12)" : "#F1F5F9",
-                                            color: formData.category === cat ? "#4F46E5" : "#64748B",
+                                            bgcolor: formData.category === cat ? "rgba(15, 118, 110, 0.12)" : "#ECF2F0",
+                                            color: formData.category === cat ? "#0F766E" : "#647B84",
                                             fontWeight: 600,
                                             cursor: "pointer",
-                                            "&:hover": { bgcolor: "rgba(79, 70, 229, 0.15)" },
+                                            "&:hover": { bgcolor: "rgba(15, 118, 110, 0.15)" },
                                         }}
                                     />
                                 ))}

@@ -26,13 +26,13 @@ const Home = () => {
 
     const features = [
         {
-            icon: <SecurityOutlinedIcon sx={{ fontSize: 26, color: "#4F46E5" }} />,
+            icon: <SecurityOutlinedIcon sx={{ fontSize: 26, color: "#0F766E" }} />,
             title: "100% Anonymous Posting",
             description:
                 "Express your concerns, report issues, or suggest improvements without compromising your identity or privacy.",
         },
         {
-            icon: <ForumOutlinedIcon sx={{ fontSize: 26, color: "#0EA5E9" }} />,
+            icon: <ForumOutlinedIcon sx={{ fontSize: 26, color: "#2B5D73" }} />,
             title: "Campus Community Feed",
             description:
                 "Engage with posts from fellow students through upvotes, downvotes, and constructive discussions.",
@@ -64,16 +64,16 @@ const Home = () => {
                     }}
                 >
                     <Chip
-                        icon={<CampaignIcon style={{ fontSize: 16, color: "#4F46E5" }} />}
+                        icon={<CampaignIcon style={{ fontSize: 16, color: "#0F766E" }} />}
                         label="Anonymous Campus Feedback Platform"
                         sx={{
-                            bgcolor: "rgba(79, 70, 229, 0.08)",
-                            color: "#4F46E5",
+                            bgcolor: "rgba(15, 118, 110, 0.08)",
+                            color: "#0F766E",
                             fontWeight: 700,
                             mb: 3,
                             px: 1,
                             py: 0.5,
-                            border: "1px solid rgba(79, 70, 229, 0.2)",
+                            border: "1px solid rgba(15, 118, 110, 0.2)",
                         }}
                     />
 
@@ -88,14 +88,14 @@ const Home = () => {
                         }}
                     >
                         Speak Up. Drive Change.{" "}
-                        <span style={{ color: "#4F46E5" }}>Anonymously.</span>
+                        <span style={{ color: "#0F766E" }}>Anonymously.</span>
                     </Typography>
 
                     <Typography
                         variant="body1"
                         sx={{
                             fontSize: { xs: "1rem", sm: "1.125rem" },
-                            color: "#64748B",
+                            color: "#647B84",
                             lineHeight: 1.7,
                             mb: 4,
                             px: { xs: 2, sm: 4 },
@@ -183,7 +183,7 @@ const Home = () => {
                             textAlign: "center",
                             fontWeight: 700,
                             mb: 4,
-                            color: "#0F172A",
+                            color: "#16324F",
                         }}
                     >
                         Designed for Student Empowerment & Campus Quality
@@ -200,7 +200,7 @@ const Home = () => {
                                         "&:hover": {
                                             transform: "translateY(-4px)",
                                             boxShadow: "0 12px 24px -6px rgba(15, 23, 42, 0.08)",
-                                            borderColor: "#CBD5E1",
+                                            borderColor: "#C5D3D0",
                                         },
                                     }}
                                 >
@@ -210,7 +210,7 @@ const Home = () => {
                                                 width: 48,
                                                 height: 48,
                                                 borderRadius: "12px",
-                                                bgcolor: "#F1F5F9",
+                                                bgcolor: "#ECF2F0",
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
@@ -222,7 +222,7 @@ const Home = () => {
                                         <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: 700, mb: 1 }}>
                                             {item.title}
                                         </Typography>
-                                        <Typography variant="body2" sx={{ color: "#64748B", lineHeight: 1.6 }}>
+                                        <Typography variant="body2" sx={{ color: "#647B84", lineHeight: 1.6 }}>
                                             {item.description}
                                         </Typography>
                                     </CardContent>

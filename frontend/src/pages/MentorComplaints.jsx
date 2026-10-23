@@ -50,7 +50,7 @@ const MentorComplaints = () => {
     return (
         <Container maxWidth="md" sx={{ py: { xs: 4, md: 6 } }}>
             <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2.25rem" }, fontWeight: 800 }}>Complaint Review</Typography>
-            <Typography sx={{ color: "#64748B", mt: 0.5, mb: 3 }}>Review student complaints and send an official response.</Typography>
+            <Typography sx={{ color: "#647B84", mt: 0.5, mb: 3 }}>Review student complaints and send an official response.</Typography>
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
             {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
             {loading && <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}><CircularProgress /></Box>}
@@ -58,16 +58,16 @@ const MentorComplaints = () => {
             {!loading && complaints.map((complaint) => {
                 const complaintResponses = responses.filter((item) => item.complaintId === complaint.id);
                 return (
-                    <Card key={complaint.id} elevation={0} sx={{ mb: 2, border: "1px solid #E2E8F0", borderRadius: 3 }}>
+                    <Card key={complaint.id} elevation={0} sx={{ mb: 2, border: "1px solid #DCE6E3", borderRadius: 3 }}>
                         <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
                             <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, alignItems: "flex-start" }}>
                                 <Box>
                                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{complaint.subject}</Typography>
-                                    <Typography variant="caption" sx={{ color: "#64748B" }}>{complaint.category} · {complaint.createdAt ? new Date(complaint.createdAt).toLocaleString() : ""}</Typography>
+                                    <Typography variant="caption" sx={{ color: "#647B84" }}>{complaint.category} · {complaint.createdAt ? new Date(complaint.createdAt).toLocaleString() : ""}</Typography>
                                 </Box>
                                 <Chip size="small" label={complaint.status} color={complaint.status === "RESOLVED" ? "success" : complaint.status === "PENDING" ? "warning" : "default"} />
                             </Box>
-                            <Typography sx={{ mt: 2, mb: 2, whiteSpace: "pre-line", color: "#334155" }}>{complaint.description}</Typography>
+                            <Typography sx={{ mt: 2, mb: 2, whiteSpace: "pre-line", color: "#3E5664" }}>{complaint.description}</Typography>
                             {complaintResponses.map((item) => <Alert key={item.id} severity={item.status === "RESOLVED" ? "success" : "info"} sx={{ mb: 1 }}>{item.response}</Alert>)}
                             {complaint.status !== "RESOLVED" && (
                                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 2 }}>

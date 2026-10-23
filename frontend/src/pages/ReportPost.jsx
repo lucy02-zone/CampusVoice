@@ -107,13 +107,13 @@ const ReportPost = () => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 6, md: 8 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 6, md: 8 } }}>
             <Container maxWidth="sm">
                 <Paper
                     elevation={0}
                     sx={{
                         p: { xs: 3, sm: 5 },
-                        border: "1px solid #E2E8F0",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "16px",
                         bgcolor: "#FFFFFF",
                     }}
@@ -138,7 +138,7 @@ const ReportPost = () => {
                         </Typography>
                     </Box>
 
-                    <Typography variant="body2" sx={{ color: "#64748B", mb: 3 }}>
+                    <Typography variant="body2" sx={{ color: "#647B84", mb: 3 }}>
                         Help community moderators maintain safety and academic guidelines.
                     </Typography>
 

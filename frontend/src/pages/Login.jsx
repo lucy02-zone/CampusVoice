@@ -59,13 +59,13 @@ const Login = ({ adminOnly = false }) => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 6, md: 10 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 6, md: 10 } }}>
             <Container maxWidth="xs">
                 <Paper
                     elevation={0}
                     sx={{
                         p: { xs: 3, sm: 4 },
-                        border: "1px solid #E2E8F0",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "16px",
                         bgcolor: "#FFFFFF",
                     }}
@@ -76,23 +76,23 @@ const Login = ({ adminOnly = false }) => {
                                 width: 44,
                                 height: 44,
                                 borderRadius: "12px",
-                                background: "linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)",
+                                background: "linear-gradient(135deg, #0F766E 0%, #115E59 100%)",
                                 color: "#FFFFFF",
                                 display: "inline-flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 mb: 1.5,
-                                boxShadow: "0 6px 14px rgba(79, 70, 229, 0.25)",
+                                boxShadow: "0 6px 14px rgba(15, 118, 110, 0.25)",
                             }}
                         >
                             <CampaignIcon fontSize="medium" />
                         </Box>
 
-                        <Typography variant="h4" sx={{ fontWeight: 800, color: "#0F172A", mb: 0.5 }}>
+                        <Typography variant="h4" sx={{ fontWeight: 800, color: "#16324F", mb: 0.5 }}>
                             {adminOnly ? "Administrator Sign In" : "Welcome Back"}
                         </Typography>
 
-                        <Typography variant="body2" sx={{ color: "#64748B" }}>
+                        <Typography variant="body2" sx={{ color: "#647B84" }}>
                             {adminOnly ? "Sign in with your administrator account." : "Log in to access your CampusVoice dashboard."}
                         </Typography>
                     </Box>
@@ -146,11 +146,11 @@ const Login = ({ adminOnly = false }) => {
                         </Button>
 
                         <Box sx={{ textAlign: "center", mt: 1 }}>
-                            {!adminOnly && <Typography variant="body2" sx={{ color: "#64748B", mb: 1 }}>
+                            {!adminOnly && <Typography variant="body2" sx={{ color: "#647B84", mb: 1 }}>
                                 Don't have an account?{" "}
-                                <Typography component={Link} to="/register" variant="body2" sx={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>Register here</Typography>
+                                <Typography component={Link} to="/register" variant="body2" sx={{ color: "#0F766E", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>Register here</Typography>
                             </Typography>}
-                            <Typography component={Link} to={adminOnly ? "/login" : "/admin/login"} variant="body2" sx={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>
+                            <Typography component={Link} to={adminOnly ? "/login" : "/admin/login"} variant="body2" sx={{ color: "#0F766E", fontWeight: 700, textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>
                                 {adminOnly ? "Student or mentor sign in" : "Administrator sign in"}
                             </Typography>
                         </Box>

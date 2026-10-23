@@ -111,8 +111,8 @@ const CommentSection = ({ postId }) => {
     return (
         <Box sx={{ mt: 2 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
-                <ChatBubbleOutlineIcon sx={{ color: "#4F46E5", fontSize: 22 }} />
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "#0F172A" }}>
+                <ChatBubbleOutlineIcon sx={{ color: "#0F766E", fontSize: 22 }} />
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "#16324F" }}>
                     Discussion ({comments.length})
                 </Typography>
             </Box>
@@ -125,7 +125,7 @@ const CommentSection = ({ postId }) => {
 
             {loading ? (
                 <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                    <CircularProgress size={30} sx={{ color: "#4F46E5" }} />
+                    <CircularProgress size={30} sx={{ color: "#0F766E" }} />
                 </Box>
             ) : comments.length === 0 ? (
                 <Paper
@@ -133,8 +133,8 @@ const CommentSection = ({ postId }) => {
                     sx={{
                         p: 4,
                         textAlign: "center",
-                        bgcolor: "#F8FAFC",
-                        border: "1px solid #E2E8F0",
+                        bgcolor: "#F3F7F6",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "12px",
                     }}
                 >
@@ -150,7 +150,7 @@ const CommentSection = ({ postId }) => {
                         sx={{
                             p: 2.5,
                             mb: 2,
-                            border: "1px solid #E2E8F0",
+                            border: "1px solid #DCE6E3",
                             borderRadius: "12px",
                             bgcolor: "#FFFFFF",
                         }}
@@ -170,25 +170,25 @@ const CommentSection = ({ postId }) => {
                                         height: 26,
                                         fontSize: "0.75rem",
                                         fontWeight: 700,
-                                        bgcolor: "rgba(79, 70, 229, 0.1)",
-                                        color: "#4F46E5",
+                                        bgcolor: "rgba(15, 118, 110, 0.1)",
+                                        color: "#0F766E",
                                     }}
                                 >
                                     A
                                 </Avatar>
-                                <Typography variant="caption" sx={{ fontWeight: 700, color: "#334155" }}>
+                                <Typography variant="caption" sx={{ fontWeight: 700, color: "#3E5664" }}>
                                     {comment.anonymousId || "Anonymous"}
                                 </Typography>
                             </Box>
 
                             {comment.createdAt && (
-                                <Typography variant="caption" sx={{ color: "#94A3B8" }}>
+                                <Typography variant="caption" sx={{ color: "#8EA2A7" }}>
                                     {formatDate(comment.createdAt)}
                                 </Typography>
                             )}
                         </Box>
 
-                        <Typography variant="body2" sx={{ whiteSpace: "pre-line", color: "#334155", pl: 4.25 }}>
+                        <Typography variant="body2" sx={{ whiteSpace: "pre-line", color: "#3E5664", pl: 4.25 }}>
                             {comment.content}
                         </Typography>
                     </Paper>

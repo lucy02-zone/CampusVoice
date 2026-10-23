@@ -4,15 +4,15 @@ const theme = createTheme({
     palette: {
         mode: "light",
         primary: {
-            main: "#4F46E5", // Indigo 600
-            light: "#6366F1",
-            dark: "#4338CA",
+            main: "#0F766E", // Deep teal
+            light: "#14B8A6",
+            dark: "#115E59",
             contrastText: "#FFFFFF",
         },
         secondary: {
-            main: "#0EA5E9", // Sky 500
-            light: "#38BDF8",
-            dark: "#0284C7",
+            main: "#2B5D73", // Slate blue
+            light: "#4F8792",
+            dark: "#244A5D",
             contrastText: "#FFFFFF",
         },
         success: {
@@ -36,15 +36,15 @@ const theme = createTheme({
             dark: "#2563EB",
         },
         background: {
-            default: "#F8FAFC",
+            default: "#F3F7F6",
             paper: "#FFFFFF",
         },
         text: {
-            primary: "#0F172A", // Slate 900
-            secondary: "#64748B", // Slate 500
-            disabled: "#94A3B8", // Slate 400
+            primary: "#16324F", // Navy
+            secondary: "#647B84", // Muted blue gray
+            disabled: "#8EA2A7", // Muted gray
         },
-        divider: "#E2E8F0",
+        divider: "#DCE6E3",
     },
     typography: {
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
@@ -52,47 +52,47 @@ const theme = createTheme({
             fontSize: "2.5rem",
             fontWeight: 800,
             letterSpacing: "-0.025em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         h2: {
             fontSize: "2rem",
             fontWeight: 700,
             letterSpacing: "-0.02em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         h3: {
             fontSize: "1.625rem",
             fontWeight: 700,
             letterSpacing: "-0.02em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         h4: {
             fontSize: "1.375rem",
             fontWeight: 700,
             letterSpacing: "-0.015em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         h5: {
             fontSize: "1.125rem",
             fontWeight: 600,
             letterSpacing: "-0.01em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         h6: {
             fontSize: "1rem",
             fontWeight: 600,
             letterSpacing: "-0.01em",
-            color: "#0F172A",
+            color: "#16324F",
         },
         body1: {
             fontSize: "0.9375rem",
             lineHeight: 1.6,
-            color: "#334155",
+            color: "#3E5664",
         },
         body2: {
             fontSize: "0.84375rem",
             lineHeight: 1.5,
-            color: "#64748B",
+            color: "#647B84",
         },
         button: {
             textTransform: "none",
@@ -107,8 +107,8 @@ const theme = createTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 body: {
-                    backgroundColor: "#F8FAFC",
-                    color: "#0F172A",
+                    backgroundColor: "#F3F7F6",
+                    color: "#16324F",
                 },
             },
         },
@@ -121,21 +121,21 @@ const theme = createTheme({
                     boxShadow: "none",
                     transition: "all 150ms ease-in-out",
                     "&:hover": {
-                        boxShadow: "0 4px 12px rgba(79, 70, 229, 0.15)",
+                        boxShadow: "0 4px 12px rgba(15, 118, 110, 0.15)",
                     },
                 },
                 containedPrimary: {
-                    background: "linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)",
+                    background: "linear-gradient(135deg, #0F766E 0%, #115E59 100%)",
                     "&:hover": {
-                        background: "linear-gradient(135deg, #4338CA 0%, #3730A3 100%)",
+                        background: "linear-gradient(135deg, #115E59 0%, #134E4A 100%)",
                     },
                 },
                 outlined: {
-                    borderColor: "#E2E8F0",
-                    color: "#334155",
+                    borderColor: "#DCE6E3",
+                    color: "#3E5664",
                     "&:hover": {
-                        borderColor: "#CBD5E1",
-                        backgroundColor: "#F1F5F9",
+                        borderColor: "#C5D3D0",
+                        backgroundColor: "#ECF2F0",
                     },
                 },
             },
@@ -144,7 +144,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     borderRadius: 16,
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid #DCE6E3",
                     boxShadow: "0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 1px 2px -1px rgba(15, 23, 42, 0.03)",
                     backgroundImage: "none",
                     transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
@@ -158,7 +158,7 @@ const theme = createTheme({
                     backgroundImage: "none",
                 },
                 outlined: {
-                    borderColor: "#E2E8F0",
+                    borderColor: "#DCE6E3",
                 },
             },
         },
@@ -177,13 +177,13 @@ const theme = createTheme({
                     borderRadius: 10,
                     backgroundColor: "#FFFFFF",
                     "& fieldset": {
-                        borderColor: "#E2E8F0",
+                        borderColor: "#DCE6E3",
                     },
                     "&:hover fieldset": {
-                        borderColor: "#CBD5E1",
+                        borderColor: "#C5D3D0",
                     },
                     "&.Mui-focused fieldset": {
-                        borderColor: "#4F46E5",
+                        borderColor: "#0F766E",
                         borderWidth: 1.5,
                     },
                 },
@@ -194,9 +194,9 @@ const theme = createTheme({
                 root: {
                     backgroundColor: "rgba(255, 255, 255, 0.85)",
                     backdropFilter: "blur(12px)",
-                    color: "#0F172A",
+                    color: "#16324F",
                     boxShadow: "none",
-                    borderBottom: "1px solid #E2E8F0",
+                    borderBottom: "1px solid #DCE6E3",
                 },
             },
         },

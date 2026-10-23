@@ -10,8 +10,8 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background-color: #F3F7F6;
+  color: #16324F;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -35,16 +35,16 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #ECF2F0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #C5D3D0;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #8EA2A7;
 }
 
 /* Responsive chart fix */

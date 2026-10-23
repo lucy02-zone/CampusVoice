@@ -62,7 +62,7 @@ const AdminReports = () => {
             case "DISMISSED":
                 return { bgcolor: "rgba(239, 68, 68, 0.12)", color: "#DC2626", label: "DISMISSED" };
             default:
-                return { bgcolor: "#F1F5F9", color: "#64748B", label: status || "UNKNOWN" };
+                return { bgcolor: "#ECF2F0", color: "#647B84", label: status || "UNKNOWN" };
         }
     };
 
@@ -82,13 +82,13 @@ const AdminReports = () => {
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 6 } }}>
             <Container maxWidth="md">
                 <Box sx={{ mb: 4 }}>
                     <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2.25rem" }, fontWeight: 800 }}>
                         Content Reports Management
                     </Typography>
-                    <Typography variant="body1" sx={{ color: "#64748B", mt: 0.5 }}>
+                    <Typography variant="body1" sx={{ color: "#647B84", mt: 0.5 }}>
                         Review flagged posts reported by community members.
                     </Typography>
                 </Box>
@@ -102,7 +102,7 @@ const AdminReports = () => {
                             py: 8,
                         }}
                     >
-                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
+                        <CircularProgress size={36} sx={{ color: "#0F766E" }} />
                     </Box>
                 )}
 
@@ -118,16 +118,16 @@ const AdminReports = () => {
                         sx={{
                             p: 6,
                             textAlign: "center",
-                            border: "1px solid #E2E8F0",
+                            border: "1px solid #DCE6E3",
                             borderRadius: "16px",
                             bgcolor: "#FFFFFF",
                         }}
                     >
-                        <FlagOutlinedIcon sx={{ fontSize: 48, color: "#94A3B8", mb: 2 }} />
+                        <FlagOutlinedIcon sx={{ fontSize: 48, color: "#8EA2A7", mb: 2 }} />
                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                             No reports flagged
                         </Typography>
-                        <Typography variant="body2" sx={{ color: "#64748B" }}>
+                        <Typography variant="body2" sx={{ color: "#647B84" }}>
                             There are currently no active content reports requiring mentor action.
                         </Typography>
                     </Paper>
@@ -143,7 +143,7 @@ const AdminReports = () => {
                                 elevation={0}
                                 sx={{
                                     mb: 3,
-                                    border: "1px solid #E2E8F0",
+                                    border: "1px solid #DCE6E3",
                                     borderRadius: "16px",
                                     bgcolor: "#FFFFFF",
                                     transition: "all 180ms ease-in-out",
@@ -174,7 +174,7 @@ const AdminReports = () => {
                                                 }}
                                             />
                                             {report.postId && (
-                                                <Typography variant="caption" sx={{ color: "#64748B", fontWeight: 600 }}>
+                                                <Typography variant="caption" sx={{ color: "#647B84", fontWeight: 600 }}>
                                                     Target Post #{report.postId}
                                                 </Typography>
                                             )}
@@ -192,7 +192,7 @@ const AdminReports = () => {
                                         />
                                     </Box>
 
-                                    <Typography variant="body1" sx={{ color: "#334155", mb: 2, fontWeight: 500 }}>
+                                    <Typography variant="body1" sx={{ color: "#3E5664", mb: 2, fontWeight: 500 }}>
                                         {report.description}
                                     </Typography>
 
@@ -205,7 +205,7 @@ const AdminReports = () => {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "#94A3B8" }}>
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "#8EA2A7" }}>
                                             <AccessTimeOutlinedIcon sx={{ fontSize: 16 }} />
                                             <Typography variant="caption">
                                                 Reported on {formatDate(report.createdAt)}

@@ -39,21 +39,21 @@ const MentorDashboard = () => {
     ];
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 4, md: 6 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 4, md: 6 } }}>
             <Container maxWidth="lg">
                 <Typography variant="h2" sx={{ fontSize: { xs: "1.8rem", md: "2.3rem" }, fontWeight: 800 }}>Mentor Workspace</Typography>
-                <Typography sx={{ color: "#64748B", mt: 0.5, mb: 4 }}>Welcome, {user?.name || "Mentor"}. Review student concerns and reported content.</Typography>
+                <Typography sx={{ color: "#647B84", mt: 0.5, mb: 4 }}>Welcome, {user?.name || "Mentor"}. Review student concerns and reported content.</Typography>
                 {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
                 {loading ? <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}><CircularProgress /></Box> : (
                     <Grid container spacing={2.5}>
                         {cards.map((card) => (
                             <Grid size={{ xs: 12, md: 4 }} key={card.path}>
-                                <Card elevation={0} sx={{ height: "100%", border: "1px solid #E2E8F0", borderRadius: 4 }}>
+                                <Card elevation={0} sx={{ height: "100%", border: "1px solid #DCE6E3", borderRadius: 4 }}>
                                     <CardContent sx={{ p: 3 }}>
-                                        <Box sx={{ color: "#4F46E5", mb: 1 }}>{card.icon}</Box>
+                                        <Box sx={{ color: "#0F766E", mb: 1 }}>{card.icon}</Box>
                                         <Typography variant="h6" sx={{ fontWeight: 700 }}>{card.title}</Typography>
                                         {card.count !== null && <Typography variant="h3" sx={{ fontWeight: 800, my: 1 }}>{card.count}</Typography>}
-                                        <Typography variant="body2" sx={{ color: "#64748B", mb: 2 }}>{card.caption}</Typography>
+                                        <Typography variant="body2" sx={{ color: "#647B84", mb: 2 }}>{card.caption}</Typography>
                                         <Button component={Link} to={card.path} variant="outlined">Open</Button>
                                     </CardContent>
                                 </Card>

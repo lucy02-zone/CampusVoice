@@ -56,29 +56,29 @@ import { getUserStats } from "../api/userApi";
 import { getApiErrorMessage } from "../api/apiError";
 import { changePassword } from "../api/authApi";
 
-const CHART_COLORS = ["#4F46E5", "#0EA5E9", "#10B981", "#F59E0B", "#EF4444"];
+const CHART_COLORS = ["#0F766E", "#2B5D73", "#10B981", "#F59E0B", "#EF4444"];
 
 const formatNumber = (value) => Number(value ?? 0).toLocaleString();
 
-const StatCard = ({ label, value, icon: Icon, accent = "#4F46E5", caption }) => (
+const StatCard = ({ label, value, icon: Icon, accent = "#0F766E", caption }) => (
     <Card
         elevation={0}
         sx={{
             height: "100%",
             p: 2.5,
-            border: "1px solid #E2E8F0",
+            border: "1px solid #DCE6E3",
             borderRadius: "16px",
             bgcolor: "#FFFFFF",
             transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
             "&:hover": {
                 transform: "translateY(-2px)",
-                borderColor: "#CBD5E1",
+                borderColor: "#C5D3D0",
                 boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.05)",
             },
         }}
     >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
-            <Typography variant="body2" sx={{ fontWeight: 600, color: "#64748B" }}>
+            <Typography variant="body2" sx={{ fontWeight: 600, color: "#647B84" }}>
                 {label}
             </Typography>
             {Icon && (
@@ -99,11 +99,11 @@ const StatCard = ({ label, value, icon: Icon, accent = "#4F46E5", caption }) => 
             )}
         </Box>
 
-        <Typography variant="h3" sx={{ fontWeight: 800, color: "#0F172A", mb: 0.5, fontVariantNumeric: "tabular-nums" }}>
+        <Typography variant="h3" sx={{ fontWeight: 800, color: "#16324F", mb: 0.5, fontVariantNumeric: "tabular-nums" }}>
             {formatNumber(value)}
         </Typography>
 
-        <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 500 }}>
+        <Typography variant="caption" sx={{ color: "#8EA2A7", fontWeight: 500 }}>
             {caption || "Current total"}
         </Typography>
     </Card>
@@ -115,18 +115,18 @@ const ChartPanel = ({ title, subtitle, children, height = 280 }) => (
         sx={{
             height: "100%",
             p: { xs: 2.5, md: 3 },
-            border: "1px solid #E2E8F0",
+            border: "1px solid #DCE6E3",
             borderRadius: "16px",
             bgcolor: "#FFFFFF",
             minWidth: 0,
         }}
     >
-        <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
+        <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: 700, color: "#16324F" }}>
             {title}
         </Typography>
 
         {subtitle && (
-            <Typography variant="body2" sx={{ color: "#94A3B8", mt: 0.5, mb: 2 }}>
+            <Typography variant="body2" sx={{ color: "#8EA2A7", mt: 0.5, mb: 2 }}>
                 {subtitle}
             </Typography>
         )}
@@ -147,7 +147,7 @@ const EmptyChart = ({ message = "No data available yet." }) => (
             px: 2,
         }}
     >
-        <Typography variant="body2" sx={{ color: "#94A3B8", textAlign: "center" }}>
+        <Typography variant="body2" sx={{ color: "#8EA2A7", textAlign: "center" }}>
             {message}
         </Typography>
     </Box>
@@ -160,17 +160,17 @@ const CustomTooltipContent = ({ active, payload, label }) => {
                 elevation={0}
                 sx={{
                     p: 1.5,
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid #DCE6E3",
                     borderRadius: "10px",
                     bgcolor: "#FFFFFF",
                     boxShadow: "0 10px 15px -3px rgba(0,0,0,0.08)",
                 }}
             >
-                <Typography variant="caption" sx={{ fontWeight: 700, color: "#0F172A", display: "block", mb: 0.5 }}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: "#16324F", display: "block", mb: 0.5 }}>
                     {label}
                 </Typography>
                 {payload.map((entry, idx) => (
-                    <Typography key={idx} variant="body2" sx={{ color: entry.color || "#4F46E5", fontWeight: 600 }}>
+                    <Typography key={idx} variant="body2" sx={{ color: entry.color || "#0F766E", fontWeight: 600 }}>
                         {entry.name}: {entry.value}
                     </Typography>
                 ))}
@@ -403,11 +403,11 @@ const Dashboard = () => {
 
     const chartTheme = {
         fontSize: 12,
-        fill: "#64748B",
+        fill: "#647B84",
     };
 
     return (
-        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F8FAFC", py: { xs: 3, md: 5 } }}>
+        <Box sx={{ minHeight: "calc(100vh - 64px)", bgcolor: "#F3F7F6", py: { xs: 3, md: 5 } }}>
             <Container maxWidth="lg">
                 {/* Header Section */}
                 <Box
@@ -424,7 +424,7 @@ const Dashboard = () => {
                         <Typography variant="h2" sx={{ fontSize: { xs: "1.75rem", md: "2rem" }, fontWeight: 800 }}>
                             Community Dashboard
                         </Typography>
-                        <Typography variant="body1" sx={{ color: "#64748B", mt: 0.5 }}>
+                        <Typography variant="body1" sx={{ color: "#647B84", mt: 0.5 }}>
                             Real-time platform insights, personal activity, and mentor controls.
                         </Typography>
                     </Box>
@@ -465,7 +465,7 @@ const Dashboard = () => {
                     sx={{
                         p: { xs: 2.5, md: 3 },
                         mb: 4,
-                        border: "1px solid #E2E8F0",
+                        border: "1px solid #DCE6E3",
                         borderRadius: "16px",
                         bgcolor: "#FFFFFF",
                     }}
@@ -482,8 +482,8 @@ const Dashboard = () => {
                             sx={{
                                 width: 56,
                                 height: 56,
-                                bgcolor: "rgba(79, 70, 229, 0.1)",
-                                color: "#4F46E5",
+                                bgcolor: "rgba(15, 118, 110, 0.1)",
+                                color: "#0F766E",
                                 fontWeight: 800,
                                 fontSize: "1.25rem",
                             }}
@@ -500,14 +500,14 @@ const Dashboard = () => {
                                     label={user?.role || "STUDENT"}
                                     size="small"
                                     sx={{
-                                        bgcolor: isMentor ? "rgba(14, 165, 233, 0.1)" : "rgba(79, 70, 229, 0.1)",
-                                        color: isMentor ? "#0284C7" : "#4F46E5",
+                                        bgcolor: isMentor ? "rgba(43, 93, 115, 0.1)" : "rgba(15, 118, 110, 0.1)",
+                                        color: isMentor ? "#244A5D" : "#0F766E",
                                         fontWeight: 700,
                                         fontSize: "0.7rem",
                                     }}
                                 />
                             </Box>
-                            <Typography variant="body2" sx={{ color: "#64748B" }}>
+                            <Typography variant="body2" sx={{ color: "#647B84" }}>
                                 {user?.email}
                             </Typography>
                         </Box>
@@ -515,13 +515,13 @@ const Dashboard = () => {
                         <Divider orientation="vertical" flexItem sx={{ display: { xs: "none", md: "block" } }} />
 
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "#F8FAFC", p: 1.5, borderRadius: "10px", border: "1px solid #E2E8F0" }}>
-                                <AlternateEmailIcon sx={{ color: "#64748B", fontSize: 20 }} />
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "#F3F7F6", p: 1.5, borderRadius: "10px", border: "1px solid #DCE6E3" }}>
+                                <AlternateEmailIcon sx={{ color: "#647B84", fontSize: 20 }} />
                                 <Box>
-                                    <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 600, display: "block", textTransform: "uppercase", fontSize: "0.65rem" }}>
+                                    <Typography variant="caption" sx={{ color: "#8EA2A7", fontWeight: 600, display: "block", textTransform: "uppercase", fontSize: "0.65rem" }}>
                                         Anonymous Handle
                                     </Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#334155" }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#3E5664" }}>
                                         {user?.anonymousHandle || "—"}
                                     </Typography>
                                 </Box>
@@ -565,13 +565,13 @@ const Dashboard = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <CircularProgress size={36} sx={{ color: "#4F46E5" }} />
+                        <CircularProgress size={36} sx={{ color: "#0F766E" }} />
                     </Box>
                 ) : (
                     <>
                         {/* Platform Metrics */}
                         <Box sx={{ mb: 4 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#0F172A" }}>
+                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#16324F" }}>
                                 Key Metrics
                             </Typography>
 
@@ -581,7 +581,7 @@ const Dashboard = () => {
                                         label="Total Posts"
                                         value={stats.totalPosts}
                                         icon={ArticleOutlinedIcon}
-                                        accent="#4F46E5"
+                                        accent="#0F766E"
                                         caption="Across campus topics"
                                     />
                                 </Grid>
@@ -591,7 +591,7 @@ const Dashboard = () => {
                                         label="Categories"
                                         value={stats.totalCategories}
                                         icon={CategoryOutlinedIcon}
-                                        accent="#0EA5E9"
+                                        accent="#2B5D73"
                                         caption="Active discussion topics"
                                     />
                                 </Grid>
@@ -620,7 +620,7 @@ const Dashboard = () => {
 
                         {/* Visual Analytics */}
                         <Box sx={{ mb: 4 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#0F172A" }}>
+                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#16324F" }}>
                                 Analytics & Activity Trends
                             </Typography>
 
@@ -645,11 +645,11 @@ const Dashboard = () => {
                                                             x2="0"
                                                             y2="1"
                                                         >
-                                                            <stop offset="0%" stopColor="#4F46E5" stopOpacity={0.3} />
-                                                            <stop offset="100%" stopColor="#4F46E5" stopOpacity={0.0} />
+                                                            <stop offset="0%" stopColor="#0F766E" stopOpacity={0.3} />
+                                                            <stop offset="100%" stopColor="#0F766E" stopOpacity={0.0} />
                                                         </linearGradient>
                                                     </defs>
-                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ECF2F0" />
                                                     <XAxis dataKey="date" tick={chartTheme} axisLine={false} tickLine={false} />
                                                     <YAxis allowDecimals={false} tick={chartTheme} axisLine={false} tickLine={false} />
                                                     <Tooltip content={<CustomTooltipContent />} />
@@ -657,7 +657,7 @@ const Dashboard = () => {
                                                         type="monotone"
                                                     dataKey="posts"
                                                         name="Posts"
-                                                        stroke="#4F46E5"
+                                                        stroke="#0F766E"
                                                         strokeWidth={2.5}
                                                         fill="url(#postGradient)"
                                                     />
@@ -694,7 +694,7 @@ const Dashboard = () => {
                                                         ))}
                                                     </Pie>
                                                     <Tooltip content={<CustomTooltipContent />} />
-                                                    <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 12, color: "#64748B" }} />
+                                                    <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 12, color: "#647B84" }} />
                                                 </PieChart>
                                             </ResponsiveContainer>
                                         ) : (
@@ -712,7 +712,7 @@ const Dashboard = () => {
                                         {activityData.some((item) => item.value > 0) ? (
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <BarChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ECF2F0" />
                                                     <XAxis dataKey="name" tick={chartTheme} axisLine={false} tickLine={false} />
                                                     <YAxis allowDecimals={false} tick={chartTheme} axisLine={false} tickLine={false} />
                                                     <Tooltip content={<CustomTooltipContent />} />
@@ -755,7 +755,7 @@ const Dashboard = () => {
                                                             ))}
                                                         </Pie>
                                                         <Tooltip content={<CustomTooltipContent />} />
-                                                        <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 12, color: "#64748B" }} />
+                                                        <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 12, color: "#647B84" }} />
                                                     </PieChart>
                                                 </ResponsiveContainer>
                                             ) : (
