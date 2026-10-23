@@ -4,6 +4,7 @@ import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined
 import { getComplaints } from "../api/complaintApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+import PhotoGallery from "../components/PhotoGallery";
 
 const AdminComplaints = () => {
     const { token } = useAuth();
@@ -33,6 +34,7 @@ const AdminComplaints = () => {
                         </Box>
                         <Typography variant="caption" sx={{ color: "#647B84" }}>{complaint.category} · Submitted {complaint.createdAt ? new Date(complaint.createdAt).toLocaleString() : ""}</Typography>
                         <Typography sx={{ mt: 2, whiteSpace: "pre-line", color: "#3E5664" }}>{complaint.description}</Typography>
+                        <PhotoGallery images={complaint.images} />
                     </CardContent>
                 </Card>
             ))}

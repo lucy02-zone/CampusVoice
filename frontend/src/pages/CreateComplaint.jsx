@@ -5,11 +5,12 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { createComplaint } from "../api/complaintApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+import PhotoUploadField from "../components/PhotoUploadField";
 
 const CreateComplaint = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
-    const [form, setForm] = useState({ subject: "", category: "", description: "" });
+    const [form, setForm] = useState({ subject: "", category: "", description: "", images: [] });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -22,6 +23,7 @@ const CreateComplaint = () => {
                 subject: form.subject.trim(),
                 category: form.category,
                 description: form.description.trim(),
+                images: form.images,
             }, token);
             if (result.success) navigate("/dashboard", { state: { complaintSubmitted: true } });
         } catch (submitError) {
@@ -44,6 +46,7 @@ const CreateComplaint = () => {
                             {["Academics", "Facilities", "Safety", "Housing", "Harassment", "Other"].map((category) => <MenuItem key={category} value={category}>{category}</MenuItem>)}
                         </TextField>
                         <TextField label="Complaint details" required multiline rows={6} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} disabled={loading} />
+                        <PhotoUploadField images={form.images} onChange={(images) => setForm((previous) => ({ ...previous, images }))} disabled={loading} />
                         <Button type="submit" variant="contained" size="large" disabled={loading} endIcon={<SendOutlinedIcon />}>{loading ? "Submitting…" : "Submit Complaint"}</Button>
                     </Box>
                 </Paper>

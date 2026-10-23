@@ -45,6 +45,7 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    images: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
   },
   {
     tableName: "posts",

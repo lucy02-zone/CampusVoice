@@ -20,6 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { createPost } from "../api/postApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+import PhotoUploadField from "../components/PhotoUploadField";
 
 const POPULAR_CATEGORIES = ["Academics", "Facilities", "Housing", "Events", "Safety", "General"];
 
@@ -31,6 +32,7 @@ const CreatePost = () => {
         title: "",
         content: "",
         category: "",
+        images: [],
     });
 
     const [errors, setErrors] = useState({});
@@ -95,6 +97,7 @@ const CreatePost = () => {
                     title: trimmedTitle,
                     content: trimmedContent,
                     category: trimmedCategory,
+                    images: formData.images,
                 },
                 token
             );
@@ -173,6 +176,8 @@ const CreatePost = () => {
                             required
                             fullWidth
                         />
+
+                        <PhotoUploadField images={formData.images} onChange={(images) => setFormData((previous) => ({ ...previous, images }))} disabled={loading} />
 
                         <Box>
                             <TextField

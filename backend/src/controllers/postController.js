@@ -2,10 +2,13 @@ const { Post } = require("../models");
 const sequelize = require("../config/database");
 const { Op } = require("sequelize");
 const { generateAnonymousHandle } = require("../utils/anonymousHandle");
+const { validateImages } = require("../utils/validateImages");
 
 const createPost = async (req, res) => {
   try {
     const { title, content, category, isAnonymous } = req.body;
+    const validatedImages = validateImages(req.body.images);
+    if (validatedImages.error) return res.status(400).json({ success: false, message: validatedImages.error });
 
     if (!title || !content || !category) {
       return res.status(400).json({
@@ -24,6 +27,7 @@ const createPost = async (req, res) => {
       category,
       isAnonymous: anonymous,
       authorName: anonymous ? null : req.user.name,
+      images: validatedImages.images,
     });
 
     res.status(201).json({

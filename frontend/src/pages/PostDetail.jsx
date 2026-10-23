@@ -23,6 +23,7 @@ import CommentSection from "../components/CommentSection";
 import { votePost } from "../api/voteApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+import PhotoGallery from "../components/PhotoGallery";
 
 const PostDetail = () => {
     const { id } = useParams();
@@ -226,6 +227,7 @@ const PostDetail = () => {
                         >
                             {post.content}
                         </Typography>
+                        <PhotoGallery images={post.images} />
 
                         {voteMessage && (
                             <Alert severity="success" sx={{ mb: 3, borderRadius: "10px" }}>

@@ -1,8 +1,11 @@
 const { Complaint } = require("../models");
+const { validateImages } = require("../utils/validateImages");
 
 const createComplaint = async (req, res) => {
   try {
     const { subject, category, description } = req.body;
+    const validatedImages = validateImages(req.body.images);
+    if (validatedImages.error) return res.status(400).json({ success: false, message: validatedImages.error });
     if (!subject?.trim() || !category?.trim() || !description?.trim()) {
       return res.status(400).json({ success: false, message: "Subject, category, and description are required" });
     }
@@ -11,6 +14,7 @@ const createComplaint = async (req, res) => {
       subject: subject.trim(),
       category: category.trim(),
       description: description.trim(),
+      images: validatedImages.images,
     });
     return res.status(201).json({ success: true, message: "Complaint submitted successfully", complaint });
   } catch (error) {

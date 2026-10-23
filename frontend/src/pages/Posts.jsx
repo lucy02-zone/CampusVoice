@@ -26,6 +26,7 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import PhotoGallery from "../components/PhotoGallery";
 
 import { getPosts } from "../api/postApi";
 import { getApiErrorMessage } from "../api/apiError";
@@ -360,6 +361,7 @@ const Posts = () => {
                                 >
                                     {post.content}
                                 </Typography>
+                                <PhotoGallery images={post.images} />
 
                                 <Box sx={{ display: "flex", justifyContent: "flex-end", pt: 1 }}>
                                     <Button

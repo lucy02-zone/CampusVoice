@@ -4,6 +4,7 @@ import { createComplaintResponse, getComplaintResponses } from "../api/complaint
 import { getComplaints } from "../api/complaintApi";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/apiError";
+import PhotoGallery from "../components/PhotoGallery";
 
 const MentorComplaints = () => {
     const { token } = useAuth();
@@ -68,6 +69,7 @@ const MentorComplaints = () => {
                                 <Chip size="small" label={complaint.status} color={complaint.status === "RESOLVED" ? "success" : complaint.status === "PENDING" ? "warning" : "default"} />
                             </Box>
                             <Typography sx={{ mt: 2, mb: 2, whiteSpace: "pre-line", color: "#3E5664" }}>{complaint.description}</Typography>
+                            <PhotoGallery images={complaint.images} />
                             {complaintResponses.map((item) => <Alert key={item.id} severity={item.status === "RESOLVED" ? "success" : "info"} sx={{ mb: 1 }}>{item.response}</Alert>)}
                             {complaint.status !== "RESOLVED" && (
                                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 2 }}>
