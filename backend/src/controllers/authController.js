@@ -8,6 +8,36 @@ const getCurrentUser = async (req, res) => {
   res.json({ success: true, user: { id, name, email, role, anonymousHandle } });
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: "Current and new passwords are required" });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: "New password must be at least 8 characters" });
+    }
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+    if (!(await bcrypt.compare(currentPassword, user.password))) {
+      return res.status(400).json({ success: false, message: "Current password is incorrect" });
+    }
+    if (await bcrypt.compare(newPassword, user.password)) {
+      return res.status(400).json({ success: false, message: "New password must be different from your current password" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+    return res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Change password error:", error.message);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -141,4 +171,5 @@ module.exports = {
   register,
   login,
   getCurrentUser,
+  changePassword,
 };

@@ -10,9 +10,14 @@ import {
     Chip,
     CircularProgress,
     Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
     Grid,
     Paper,
+    TextField,
     Typography,
 } from "@mui/material";
 import {
@@ -40,6 +45,7 @@ import AddIcon from "@mui/icons-material/Add";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlined";
+import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 
 import { useAuth } from "../context/AuthContext";
 import { getPosts, getPostStats } from "../api/postApi";
@@ -48,6 +54,7 @@ import { getReports } from "../api/reportApi";
 import { getComplaintResponses } from "../api/complaintResponseApi";
 import { getUserStats } from "../api/userApi";
 import { getApiErrorMessage } from "../api/apiError";
+import { changePassword } from "../api/authApi";
 
 const CHART_COLORS = ["#4F46E5", "#0EA5E9", "#10B981", "#F59E0B", "#EF4444"];
 
@@ -201,6 +208,39 @@ const Dashboard = () => {
     const [reportStatusData, setReportStatusData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [passwordForm, setPasswordForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    const [passwordError, setPasswordError] = useState("");
+    const [passwordSuccess, setPasswordSuccess] = useState("");
+    const [passwordLoading, setPasswordLoading] = useState(false);
+
+    const handlePasswordChange = async (event) => {
+        event.preventDefault();
+        setPasswordError("");
+        setPasswordSuccess("");
+        if (passwordForm.newPassword.length < 8) {
+            setPasswordError("New password must be at least 8 characters.");
+            return;
+        }
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            setPasswordError("The new password and confirmation do not match.");
+            return;
+        }
+
+        setPasswordLoading(true);
+        try {
+            const result = await changePassword({
+                currentPassword: passwordForm.currentPassword,
+                newPassword: passwordForm.newPassword,
+            });
+            setPasswordSuccess(result.message || "Password updated successfully.");
+            setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        } catch (changeError) {
+            setPasswordError(getApiErrorMessage(changeError, "Unable to update password."));
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
 
     useEffect(() => {
         let active = true;
@@ -474,19 +514,47 @@ const Dashboard = () => {
 
                         <Divider orientation="vertical" flexItem sx={{ display: { xs: "none", md: "block" } }} />
 
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "#F8FAFC", p: 1.5, borderRadius: "10px", border: "1px solid #E2E8F0" }}>
-                            <AlternateEmailIcon sx={{ color: "#64748B", fontSize: 20 }} />
-                            <Box>
-                                <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 600, display: "block", textTransform: "uppercase", fontSize: "0.65rem" }}>
-                                    Anonymous Handle
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 700, color: "#334155" }}>
-                                    {user?.anonymousHandle || "—"}
-                                </Typography>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "#F8FAFC", p: 1.5, borderRadius: "10px", border: "1px solid #E2E8F0" }}>
+                                <AlternateEmailIcon sx={{ color: "#64748B", fontSize: 20 }} />
+                                <Box>
+                                    <Typography variant="caption" sx={{ color: "#94A3B8", fontWeight: 600, display: "block", textTransform: "uppercase", fontSize: "0.65rem" }}>
+                                        Anonymous Handle
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#334155" }}>
+                                        {user?.anonymousHandle || "—"}
+                                    </Typography>
+                                </Box>
                             </Box>
+                            <Button variant="outlined" size="small" startIcon={<LockResetOutlinedIcon />} onClick={() => {
+                                setPasswordError("");
+                                setPasswordSuccess("");
+                                setPasswordDialogOpen(true);
+                            }}>
+                                Change Password
+                            </Button>
                         </Box>
                     </Box>
                 </Paper>
+
+                <Dialog open={passwordDialogOpen} onClose={() => !passwordLoading && setPasswordDialogOpen(false)} fullWidth maxWidth="xs">
+                    <Box component="form" onSubmit={handlePasswordChange}>
+                        <DialogTitle sx={{ fontWeight: 700 }}>Change Login Password</DialogTitle>
+                        <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2.5, pt: "8px !important" }}>
+                            {passwordError && <Alert severity="error">{passwordError}</Alert>}
+                            {passwordSuccess && <Alert severity="success">{passwordSuccess}</Alert>}
+                            <TextField label="Current password" type="password" autoComplete="current-password" required value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })} disabled={passwordLoading} />
+                            <TextField label="New password" type="password" autoComplete="new-password" required inputProps={{ minLength: 8 }} helperText="Use at least 8 characters." value={passwordForm.newPassword} onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })} disabled={passwordLoading} />
+                            <TextField label="Confirm new password" type="password" autoComplete="new-password" required value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })} disabled={passwordLoading} />
+                        </DialogContent>
+                        <DialogActions sx={{ p: 2.5, pt: 1 }}>
+                            <Button onClick={() => setPasswordDialogOpen(false)} disabled={passwordLoading}>Cancel</Button>
+                            <Button type="submit" variant="contained" disabled={passwordLoading}>
+                                {passwordLoading ? "Updating…" : "Update Password"}
+                            </Button>
+                        </DialogActions>
+                    </Box>
+                </Dialog>
 
                 {loading ? (
                     <Box
@@ -587,7 +655,7 @@ const Dashboard = () => {
                                                     <Tooltip content={<CustomTooltipContent />} />
                                                     <Area
                                                         type="monotone"
-                                                        dataKey="count"
+                                                    dataKey="posts"
                                                         name="Posts"
                                                         stroke="#4F46E5"
                                                         strokeWidth={2.5}
