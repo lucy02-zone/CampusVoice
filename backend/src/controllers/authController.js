@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sequelize = require("../config/database");
 const { User } = require("../models");
 const { generateAnonymousHandle } = require("../utils/anonymousHandle");
 
@@ -112,8 +113,9 @@ const login = async (req, res) => {
       });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
     const user = await User.findOne({
-      where: { email },
+      where: sequelize.where(sequelize.fn("LOWER", sequelize.col("email")), normalizedEmail),
     });
 
     if (!user) {
