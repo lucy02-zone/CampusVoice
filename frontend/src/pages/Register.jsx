@@ -5,11 +5,7 @@ import {
     Box,
     Button,
     Container,
-    FormControl,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
     TextField,
     Typography,
 } from "@mui/material";
@@ -26,7 +22,6 @@ const Register = () => {
         name: "",
         email: "",
         password: "",
-        role: "STUDENT",
     });
 
     const [message, setMessage] = useState("");
@@ -153,20 +148,6 @@ const Register = () => {
                             required
                             fullWidth
                         />
-
-                        <FormControl fullWidth>
-                            <InputLabel id="role-select-label">Account Role</InputLabel>
-                            <Select
-                                labelId="role-select-label"
-                                name="role"
-                                value={formData.role}
-                                label="Account Role"
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="STUDENT">Student</MenuItem>
-                                <MenuItem value="MENTOR">Mentor</MenuItem>
-                            </Select>
-                        </FormControl>
 
                         <Button
                             type="submit"

@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
     Alert,
     Box,
-    Button,
     Card,
-    CardActions,
     CardContent,
     Chip,
     CircularProgress,
@@ -15,7 +12,6 @@ import {
     Typography,
 } from "@mui/material";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
-import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import { getReports } from "../api/reportApi";
@@ -212,17 +208,6 @@ const AdminReports = () => {
                                             </Typography>
                                         </Box>
 
-                                        {report.postId && (
-                                            <Button
-                                                component={Link}
-                                                to={`/posts/${report.postId}`}
-                                                variant="outlined"
-                                                size="small"
-                                                endIcon={<ArrowForwardOutlinedIcon fontSize="small" />}
-                                            >
-                                                Inspect Post
-                                            </Button>
-                                        )}
                                     </Box>
                                 </CardContent>
                             </Card>

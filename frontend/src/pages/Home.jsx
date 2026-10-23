@@ -104,7 +104,18 @@ const Home = () => {
                         CampusVoice empowers students to voice concerns, report facilities or academic issues, and collaborate with campus leaders — all while keeping identity protected.
                     </Typography>
 
-                    {isAuthenticated ? (
+                    {isAuthenticated && user?.role === "ADMIN" ? (
+                        <Button
+                            variant="contained"
+                            size="large"
+                            component={Link}
+                            to="/admin"
+                            endIcon={<ArrowForwardOutlinedIcon />}
+                            sx={{ py: 1.5, px: 4, fontSize: "0.9375rem" }}
+                        >
+                            Open Admin Dashboard
+                        </Button>
+                    ) : isAuthenticated ? (
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
                             <Button
                                 variant="contained"

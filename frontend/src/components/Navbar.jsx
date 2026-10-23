@@ -25,6 +25,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
@@ -57,6 +58,7 @@ const Navbar = () => {
               { label: "Admin Dashboard", path: "/admin", icon: <DashboardOutlinedIcon fontSize="small" /> },
               { label: "Reports", path: "/admin/reports", icon: <FlagOutlinedIcon fontSize="small" /> },
               { label: "Complaints", path: "/admin/complaints", icon: <RateReviewOutlinedIcon fontSize="small" /> },
+              { label: "Mentors", path: "/admin/mentors", icon: <PersonAddAlt1OutlinedIcon fontSize="small" /> },
           ]
         : [
         { label: "Feed", path: "/posts", icon: <ArticleOutlinedIcon fontSize="small" /> },

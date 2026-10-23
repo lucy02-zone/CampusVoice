@@ -1,4 +1,36 @@
-const { Post, Comment, Vote } = require("../models");
+const bcrypt = require("bcrypt");
+const { Post, Comment, Vote, User } = require("../models");
+const { generateAnonymousHandle } = require("../utils/anonymousHandle");
+
+const createMentor = async (req, res) => {
+  try {
+    const name = req.body.name?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password;
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: "Name, email, and password are required" });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+    }
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ success: false, message: "An account already uses this email" });
+    }
+
+    const mentor = await User.create({ name, email, password: await bcrypt.hash(password, 12), role: "MENTOR" });
+    const anonymousHandle = generateAnonymousHandle(mentor.id);
+    await mentor.update({ anonymousHandle });
+    return res.status(201).json({
+      success: true,
+      message: "Mentor account created successfully",
+      user: { id: mentor.id, name: mentor.name, email: mentor.email, role: mentor.role },
+    });
+  } catch (error) {
+    console.error("Create mentor error:", error.message);
+    return res.status(500).json({ success: false, message: "Server error creating mentor account" });
+  }
+};
 
 const getUserStats = async (req, res) => {
   try {
@@ -56,4 +88,5 @@ const getUserStats = async (req, res) => {
 
 module.exports = {
   getUserStats,
+  createMentor,
 };

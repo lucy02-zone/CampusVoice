@@ -11,6 +11,7 @@ import {
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 
 const sections = [
     {
@@ -24,6 +25,12 @@ const sections = [
         description: "Review and manage campus complaints.",
         path: "/admin/complaints",
         icon: <RateReviewOutlinedIcon />,
+    },
+    {
+        title: "Create mentors",
+        description: "Create a secure login for a campus mentor.",
+        path: "/admin/mentors",
+        icon: <PersonAddAlt1OutlinedIcon />,
     },
 ];
 

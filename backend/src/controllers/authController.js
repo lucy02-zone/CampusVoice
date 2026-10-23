@@ -49,12 +49,10 @@ const register = async (req, res) => {
       });
     }
 
-    if (role && !["STUDENT", "MENTOR"].includes(role)) {
+    if (role && role !== "STUDENT") {
       return res.status(400).json({
         success: false,
-        message: role === "ADMIN"
-          ? "Admin accounts must be provisioned through an authorized process"
-          : "Invalid account role",
+        message: "Mentor and admin accounts must be created by an administrator",
       });
     }
 

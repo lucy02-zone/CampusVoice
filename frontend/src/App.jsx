@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateComplaint from "./pages/CreateComplaint";
 import AdminComplaints from "./pages/AdminComplaints";
+import AdminMentors from "./pages/AdminMentors";
 const App = () => {
   return (
     <BrowserRouter>
@@ -26,29 +27,22 @@ const App = () => {
         <Route path="/admin/login" element={<Login adminOnly />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/posts" element={<Posts />} />
+        <Route path="/dashboard" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><Dashboard /></ProtectedRoute>} />
+        <Route path="/posts" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><Posts /></ProtectedRoute>} />
         <Route
           path="/create-post"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}>
               <CreatePost />
             </ProtectedRoute>
           }
         />
-        <Route path="/complaints/new" element={<ProtectedRoute><CreateComplaint /></ProtectedRoute>} />
-        <Route path="/posts/:id" element={<PostDetail />} />
+        <Route path="/complaints/new" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><CreateComplaint /></ProtectedRoute>} />
+        <Route path="/posts/:id" element={<ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}><PostDetail /></ProtectedRoute>} />
         <Route
           path="/notifications"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}>
               <Notifications />
             </ProtectedRoute>
           }
@@ -56,7 +50,7 @@ const App = () => {
         <Route
           path="/report"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole={["STUDENT", "MENTOR"]}>
               <ReportPost />
             </ProtectedRoute>
           }
@@ -78,6 +72,7 @@ const App = () => {
           }
         />
         <Route path="/admin/complaints" element={<ProtectedRoute requiredRole="ADMIN"><AdminComplaints /></ProtectedRoute>} />
+        <Route path="/admin/mentors" element={<ProtectedRoute requiredRole="ADMIN"><AdminMentors /></ProtectedRoute>} />
         <Route
           path="/admin/complaint-responses"
           element={
